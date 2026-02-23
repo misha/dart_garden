@@ -1,0 +1,60 @@
+{
+  "folders": [
+    {
+      "path": ".",
+      "name": "root",
+    },
+    {
+      "path": "packages/garden",
+    },
+    {
+      "path": "packages/garden_dogs",
+      "name": "dogs",
+    },
+    {
+      "path": "packages/example_tictactoe",
+      "name": "tictactoe (example)",
+    },
+    {
+      "path": ".github",
+      "name": "github",
+    },
+  ],
+  "settings": {
+    "cSpell.enabled": true,
+    "chat.disableAIFeatures": true,
+    "editor.defaultColorDecorators": "always",
+    "editor.formatOnSave": true,
+    "files.exclude": {
+      "**/*.g.dart": true,
+    },
+    "files.insertFinalNewline": true,
+    "git.autoRepositoryDetection": "subFolders",
+    "dart.lineLength": 120,
+    "dart.runPubGetOnNestedProjects": "none",
+    "[dart]": {
+      "editor.detectIndentation": false,
+      "editor.insertSpaces": true,
+      "editor.indentSize": 2,
+    },
+    "cSpell.ignorePaths": [
+      "main.code-workspace",
+      "pubspec.lock",
+      ".git/{info,lfs,logs,refs,objects}/**",
+      ".git/{index,*refs,*HEAD}",
+    ],
+    "cSpell.words": [
+      "Dataclass",
+      "Nargs",
+      "subosito",
+      "tearoffs",
+      "tictactoe"
+    ],
+  },
+  "extensions": {
+    "recommendations": [
+      "streetsidesoftware.code-spell-checker-cspell-bundled-dictionaries",
+      "dart-code.dart-code",
+    ],
+  },
+}

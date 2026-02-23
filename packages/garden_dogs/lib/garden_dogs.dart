@@ -1,0 +1,33 @@
+import 'package:dogs_core/dogs_core.dart';
+import 'package:garden/garden.dart';
+import 'package:garden_dogs/src/converters/map_leaf_converter.dart';
+import 'package:garden_dogs/src/converters/value_leaf_converter.dart';
+
+final _valueLeafFactory = TreeBaseConverterFactory.createNargsFactory<ValueLeaf>(
+  nargs: 1,
+  consume: <T>() => ValueLeafConverter<T>(),
+);
+
+final _listLeafFactory = TreeBaseConverterFactory.createIterableFactory<ListLeaf>(
+  wrap: <T>(Iterable<T> entries) => ListLeaf<T>(entries),
+  unwrap: <T>(ListLeaf value) => value,
+);
+
+final _setLeafFactory = TreeBaseConverterFactory.createIterableFactory<SetLeaf>(
+  wrap: <T>(Iterable<T> entries) => SetLeaf<T>(entries),
+  unwrap: <T>(SetLeaf value) => value,
+);
+
+final _mapLeafFactory = TreeBaseConverterFactory.createNargsFactory<MapLeaf>(
+  nargs: 2,
+  consume: <K, V>() => MapLeafConverter<K, V>(),
+);
+
+DogPlugin GardenPlugin() => (engine) {
+  engine.registerAllTreeBaseFactories([
+    MapEntry(TypeToken<ValueLeaf>(), _valueLeafFactory),
+    MapEntry(TypeToken<ListLeaf>(), _listLeafFactory),
+    MapEntry(TypeToken<SetLeaf>(), _setLeafFactory),
+    MapEntry(TypeToken<MapLeaf>(), _mapLeafFactory),
+  ]);
+};
