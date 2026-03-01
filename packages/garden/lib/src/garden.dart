@@ -7,14 +7,14 @@ import 'package:meta/meta.dart';
 ///
 /// Mutations recorded while branched can later be [commit]ted or [revert]ed.
 class Garden {
-  @protected
-  final history = <Cell>[];
+  final _history = <Cell>[];
+  int _version = 0;
 
-  @protected
-  int version = 0;
+  /// The current branching depth of the garden.
+  int get version => _version;
 
   /// Whether the garden currently has an active branch.
-  bool get isBranched => version > 0;
+  bool get isBranched => _version > 0;
 
   /// Runs [task] in this garden's zone and returns its result.
   ///
@@ -25,7 +25,7 @@ class Garden {
 
   /// Starts a new branch level for recording reversible mutations.
   void branch() {
-    version += 1;
+    _version += 1;
   }
 
   /// Commits all pending mutations and clears undo history.
@@ -33,8 +33,8 @@ class Garden {
   /// Must be called only while branched.
   void commit() {
     assert(isBranched);
-    version = 0;
-    history.clear();
+    _version = 0;
+    _history.clear();
   }
 
   /// Reverts mutations from the current branch level and exits that branch.
@@ -42,10 +42,10 @@ class Garden {
   /// Must be called only while branched.
   void revert() {
     assert(isBranched);
-    version -= 1;
+    _version -= 1;
 
-    while (history.isNotEmpty && history.last.version > version) {
-      history.removeLast().undo();
+    while (_history.isNotEmpty && _history.last.version > _version) {
+      _history.removeLast().undo();
     }
   }
 }
@@ -59,7 +59,7 @@ mixin Leaf {
   @protected
   void record(void Function() undo) {
     if (!garden.isBranched) return;
-    final cell = Cell(undo, garden.version);
-    garden.history.add(cell);
+    final cell = Cell(undo, garden._version);
+    garden._history.add(cell);
   }
 }

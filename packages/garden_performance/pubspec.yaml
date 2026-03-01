@@ -12,9 +12,9 @@ dependencies:
   collection: ^1.19.1
   json_annotation: ^4.9.0
 dev_dependencies:
-  build_runner: ^2.4.15
+  build_runner: ^2.11.1
   json_serializable: ^6.9.5
-  lints: ^6.0.0
+  lints: ^6.1.0
 scripts:
   analyze: dart analyze
   build: dart run build_runner build --delete-conflicting-outputs

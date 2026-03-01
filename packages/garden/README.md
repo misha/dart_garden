@@ -1,10 +1,14 @@
 # Garden
 
-The branching data structure library for Dart.
+Transactional data structures for Dart.
 
 ## Description
 
-Garden offers data structures to augment Dart primitives and collections with in-memory change tracking. The primary class is a `Garden`, which allows you to grow connected `Leaf` instances.
+Garden offers data structures to augment Dart primitives and collections with in-memory transaction support.
+
+The primary class is a `Garden`, which allows you to `grow` connected `Leaf` instances. The garden offers methods to `branch`, `commit`, and `revert` all its leaves at once. As leaves are mutated, they record the inverse operation to an undo stack.
+
+Below is a usage example in which a `turn` leaf is tentatively modified, then reverted to a previous state.
 
 ```dart
 // Create a new garden.
@@ -13,11 +17,7 @@ final garden = Garden();
 // Grow a connected value, in this case a simple integer.
 // All leaves must be created inside a `garden.grow` call.
 final turn = garden.grow(() => ValueLeaf(0));
-```
 
-The garden offers operations to `branch`, `commit`, and `revert` its leaves. As leaves are mutated, they record the inverse operation to an undo stack.
-
-```dart
 garden.branch();        // Begin tentative execution.
 print(turn.value);      // 0
 
@@ -31,28 +31,25 @@ print(turn.value);      // 0
 // print(turn.value);   // 1
 ```
 
-## Leaf Implementations
+## Leaves
 
 Currently, the following leaves are available:
 
-| Leaf        | Usage                       |
-|-------------|-----------------------------|
-| `ValueLeaf` | Boxes a primitive value.    |
-| `ListLeaf`  | Drop-in `List` replacement. |
-| `SetLeaf`   | Drop-in `Set` replacement.  |
-| `MapLeaf`   | Drop-in `Map` replacement.  |
-
-All mutating operations on `List`, `Set`, and `Map` are implemented with undo support.
-
-All private fields of `Garden` and `Leaf` are marked `@protected` if you would like to extend the garden or implement your own leaf types, e.g. an `RngLeaf` powered by [`chaos`](https://pub.dev/packages/chaos).
+| Leaf        | Usage                                                                               |
+|-------------|-------------------------------------------------------------------------------------|
+| `ValueLeaf` | Boxes a primitive value.                                                            |
+| `ListLeaf`  | Drop-in `List` replacement.                                                         |
+| `SetLeaf`   | Drop-in `Set` replacement.                                                          |
+| `MapLeaf`   | Drop-in `Map` replacement.                                                          |
+| `RngLeaf`   | Drop-in `Random` replacement, powered by [`chaos`](https://pub.dev/packages/chaos). |
 
 ## Serialization
 
-The undo functionality stores function pointers, minimizing allocations at the cost of serialization. This makes `garden` a good choice for in-memory simulations, but a poor one for use cases that require saving the undo stack to disk for subsequent continuation.
+The undo functionality stores function pointers. In other words, **this library cannot serialize its undo stack**. This makes `garden` a great choice for in-memory simulations, but a poor one for use cases that require saving state mid-transaction (e.g. for subsequent continuation).
 
-For serialization of the values themselves, unfortunately `json_serializable` does not support generic classes. `dogs` is a fantastic alternative that does. For fast, transparent serialization, use `garden_dogs` and import its `GardenPlugin` into your [`dogs`](https://pub.dev/packages/dogs_core) instance.
+For serialization of the values themselves, unfortunately `json_serializable` does not support generic classes. [`dogs`](https://pub.dev/packages/dogs_core) is a fantastic alternative that *does*. For fast, transparent serialization, use [`garden_dogs`](https://pub.dev/packages/garden_dogs) and import its `GardenPlugin` into your `dogs` instance.
 
-Note that this still does *not* serialize the undo stack.
+Note that this still does **not** serialize the undo stack.
 
 ## Motivation
 

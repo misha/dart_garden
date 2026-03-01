@@ -15,6 +15,7 @@ const _operations = {
   'list': ['set', 'add', 'addAll', 'insert', 'insertAll', 'remove', 'removeAt', 'removeRange', 'removeWhere', 'removeWhereSparse', 'removeLast', 'clear'],
   'set': ['add', 'addAll', 'remove', 'removeAll', 'removeWhere', 'clear'],
   'map': ['set', 'addEntries', 'remove', 'removeWhere', 'update', 'updateAll', 'clear'],
+  'rng': ['nextInt'],
 };
 // dart format on
 
@@ -351,6 +352,22 @@ void Function(int i) _build(String type, String operation, int runs, Random rng)
 
         case 'clear':
           return (_) => leaf.clear();
+
+        default:
+          throw ArgumentError.value(operation, 'operation');
+      }
+
+    case 'rng':
+      final leaf = RngLeaf(rng.nextInt(1 << 32));
+
+      switch (operation) {
+        case 'nextInt':
+          final counts = _generate(runs, rng, max: 10);
+          return (i) {
+            for (var j = 0; j <= counts[i]; j++) {
+              leaf.nextInt();
+            }
+          };
 
         default:
           throw ArgumentError.value(operation, 'operation');

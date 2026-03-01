@@ -48,12 +48,15 @@
       ".git/{index,*refs,*HEAD}",
     ],
     "cSpell.words": [
+      "conv",
       "Dataclass",
       "Nargs",
       "perftest",
+      "Seedable",
       "subosito",
       "tearoffs",
-      "tictactoe"
+      "tictactoe",
+      "Xoshiro"
     ],
   },
   "extensions": {

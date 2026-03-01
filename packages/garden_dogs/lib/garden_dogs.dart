@@ -1,6 +1,7 @@
 import 'package:dogs_core/dogs_core.dart';
 import 'package:garden/garden.dart';
 import 'package:garden_dogs/src/converters/map_leaf_converter.dart';
+import 'package:garden_dogs/src/converters/rng_leaf_converter.dart';
 import 'package:garden_dogs/src/converters/value_leaf_converter.dart';
 
 final _valueLeafFactory = TreeBaseConverterFactory.createNargsFactory<ValueLeaf>(
@@ -24,6 +25,10 @@ final _mapLeafFactory = TreeBaseConverterFactory.createNargsFactory<MapLeaf>(
 );
 
 DogPlugin GardenPlugin() => (engine) {
+  engine.registerAllConverters([
+    RngLeafConverter(),
+  ]);
+
   engine.registerAllTreeBaseFactories([
     MapEntry(TypeToken<ValueLeaf>(), _valueLeafFactory),
     MapEntry(TypeToken<ListLeaf>(), _listLeafFactory),
