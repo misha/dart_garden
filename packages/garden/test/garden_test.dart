@@ -96,6 +96,37 @@ void main() {
       expect(leaf, isEmpty);
     });
 
+    test('commit and revert removeAt()', () {
+      garden.branch();
+      expect(leaf.removeAt(1), equals(2));
+      garden.revert();
+      expect(leaf, equals([1, 2, 3]));
+
+      garden.branch();
+      expect(leaf.removeAt(1), equals(2));
+      garden.commit();
+      expect(leaf, equals([1, 3]));
+    });
+
+    test('commit and revert removeRange()', () {
+      garden.branch();
+      leaf.removeRange(0, 2);
+      garden.revert();
+      expect(leaf, equals([1, 2, 3]));
+
+      garden.branch();
+      leaf.removeRange(0, 2);
+      garden.commit();
+      expect(leaf, equals([3]));
+    });
+
+    test('removeRange with empty range is a no-op', () {
+      garden.branch();
+      leaf.removeRange(1, 1);
+      garden.revert();
+      expect(leaf, equals([1, 2, 3]));
+    });
+
     test('commit and revert removeWhere()', () {
       garden.branch();
       leaf.removeWhere((value) => value.isEven);

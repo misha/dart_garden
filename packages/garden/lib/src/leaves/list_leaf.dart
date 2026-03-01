@@ -32,14 +32,15 @@ class ListLeaf<T> extends DelegatingList<T> with Leaf {
     if (value is! T) return false;
     final index = super.indexOf(value);
     if (index == -1) return false;
-    super.removeAt(index);
-    record(() => super.insert(index, value));
+    removeAt(index);
     return true;
   }
 
   @override
   T removeAt(int index) {
-    throw UnimplementedError();
+    final backup = super.removeAt(index);
+    record(() => super.insert(index, backup));
+    return backup;
   }
 
   @override
@@ -80,14 +81,17 @@ class ListLeaf<T> extends DelegatingList<T> with Leaf {
 
   @override
   T removeLast() {
-    final value = super.removeLast();
-    record(() => super.add(value));
-    return value;
+    final backup = super.removeLast();
+    record(() => super.add(backup));
+    return backup;
   }
 
   @override
   void removeRange(int start, int end) {
-    throw UnimplementedError();
+    if (start == end) return;
+    final backup = sublist(start, end);
+    super.removeRange(start, end);
+    record(() => super.insertAll(start, backup));
   }
 
   @override

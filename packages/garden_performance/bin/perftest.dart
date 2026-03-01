@@ -12,7 +12,7 @@ part 'perftest.g.dart';
 // dart format off
 const _operations = {
   'value': ['set'],
-  'list': ['set', 'add', 'addAll', 'remove', 'removeWhere', 'removeWhereSparse', 'removeLast', 'clear'],
+  'list': ['set', 'add', 'addAll', 'remove', 'removeAt', 'removeRange', 'removeWhere', 'removeWhereSparse', 'removeLast', 'clear'],
   'set': ['add', 'addAll', 'remove', 'clear'],
   'map': ['set', 'remove', 'update', 'updateAll', 'clear'],
 };
@@ -243,6 +243,15 @@ void Function(int i) _build(String type, String operation, int runs, Random rng)
         case 'remove':
           final targets = _generate(runs, rng, max: 100);
           return (i) => leaf.remove(targets[i]);
+
+        case 'removeAt':
+          final indices = _generate(runs, rng, max: 100);
+          return (i) => leaf.removeAt(indices[i]);
+
+        case 'removeRange':
+          final starts = _generate(runs, rng, max: 90);
+          final lengths = _generate(runs, rng, max: 10);
+          return (i) => leaf.removeRange(starts[i], starts[i] + lengths[i]);
 
         case 'removeWhere':
           final thresholds = _generate(runs, rng, max: 100);
