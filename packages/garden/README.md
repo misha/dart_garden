@@ -42,9 +42,9 @@ Currently, the following leaves are available:
 | `SetLeaf`   | Drop-in `Set` replacement.  |
 | `MapLeaf`   | Drop-in `Map` replacement.  |
 
-Note that not all operations are implemented yet, especially things like `removeAll`, `removeWhere`, etc. If you run into an `UnimplementedError`, feel free to open an issue or a PR and we'll get it done.
+All mutating operations on `List`, `Set`, and `Map` are implemented with undo support.
 
-Lastly, all private fields of `Garden` and `Leaf` are marked `@protected` if you would like to extend the garden or implement your own leaf types, e.g. an `RngLeaf` powered by [`chaos`](https://pub.dev/packages/chaos).
+All private fields of `Garden` and `Leaf` are marked `@protected` if you would like to extend the garden or implement your own leaf types, e.g. an `RngLeaf` powered by [`chaos`](https://pub.dev/packages/chaos).
 
 ## Serialization
 
