@@ -19,12 +19,31 @@ class MapLeaf<K, V> extends DelegatingMap<K, V> with Leaf {
 
   @override
   void addAll(Map<K, V> other) {
-    throw UnimplementedError();
+    addEntries(other.entries);
   }
 
   @override
-  void addEntries(Iterable<MapEntry<K, V>> entries) {
-    throw UnimplementedError();
+  void addEntries(Iterable<MapEntry<K, V>> newEntries) {
+    final overwritten = <K, V>{};
+    final added = <K>[];
+
+    for (final MapEntry(:key, :value) in newEntries) {
+      if (containsKey(key)) {
+        overwritten.putIfAbsent(key, () => super[key] as V);
+      } else {
+        added.add(key);
+      }
+      super[key] = value;
+    }
+
+    if (overwritten.isNotEmpty || added.isNotEmpty) {
+      record(() {
+        super.addAll(overwritten);
+        for (final key in added) {
+          super.remove(key);
+        }
+      });
+    }
   }
 
   @override
@@ -40,7 +59,13 @@ class MapLeaf<K, V> extends DelegatingMap<K, V> with Leaf {
 
   @override
   void removeWhere(bool Function(K, V) test) {
-    throw UnimplementedError();
+    final removed = <K, V>{};
+    for (final MapEntry(:key, :value) in entries) {
+      if (test(key, value)) removed[key] = value;
+    }
+    if (removed.isEmpty) return;
+    removed.forEach((key, _) => super.remove(key));
+    record(() => super.addAll(removed));
   }
 
   @override

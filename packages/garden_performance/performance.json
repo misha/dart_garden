@@ -4,101 +4,109 @@
   "records": [
     {
       "name": "value set",
-      "time": 5.434
+      "time": 5.682
     },
     {
       "name": "list set",
-      "time": 3.724
+      "time": 3.616
     },
     {
       "name": "list add",
-      "time": 3.462
+      "time": 3.164
     },
     {
       "name": "list addAll",
-      "time": 8.495
+      "time": 8.31
     },
     {
       "name": "list insert",
-      "time": 23.367
+      "time": 24.148
     },
     {
       "name": "list insertAll",
-      "time": 24.244
+      "time": 23.112
     },
     {
       "name": "list remove",
-      "time": 26.771
+      "time": 25.402
     },
     {
       "name": "list removeAt",
-      "time": 23.741
+      "time": 21.229
     },
     {
       "name": "list removeRange",
-      "time": 20.44
+      "time": 19.796
     },
     {
       "name": "list removeWhere",
-      "time": 61.288
+      "time": 60.379
     },
     {
       "name": "list removeWhereSparse",
-      "time": 59.014
+      "time": 58.22
     },
     {
       "name": "list removeLast",
-      "time": 3.49
+      "time": 3.204
     },
     {
       "name": "list clear",
-      "time": 17.698
+      "time": 17.812
     },
     {
       "name": "set add",
-      "time": 7.086
+      "time": 9.347
     },
     {
       "name": "set addAll",
-      "time": 39.103
+      "time": 38.323
     },
     {
       "name": "set remove",
-      "time": 4.697
+      "time": 4.663
     },
     {
       "name": "set removeAll",
-      "time": 18.377
+      "time": 18.844
     },
     {
       "name": "set removeWhere",
-      "time": 130.41
+      "time": 133.675
     },
     {
       "name": "set clear",
-      "time": 159.662
+      "time": 160.071
     },
     {
       "name": "map set",
-      "time": 8.045
+      "time": 7.902
+    },
+    {
+      "name": "map addEntries",
+      "time": 52.172
     },
     {
       "name": "map remove",
-      "time": 8.235
+      "time": 7.908
+    },
+    {
+      "name": "map removeWhere",
+      "time": 328.569
     },
     {
       "name": "map update",
-      "time": 8.168
+      "time": 6.551
     },
     {
       "name": "map updateAll",
-      "time": 272.555
+      "time": 272.025
     },
     {
       "name": "map clear",
-      "time": 276.7
+      "time": 282.265
     }
   ],
-  "timestamp": "2026-03-01T19:43:24.724946",
-  "total": 1214.2060000000001
+  "timestamp": "2026-03-01T19:46:41.727751",
+  "total": 1596.3889999999997
 }

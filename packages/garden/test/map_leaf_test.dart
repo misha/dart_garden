@@ -102,6 +102,39 @@ void main() {
     expect(leaf, equals({'a': 10, 'b': 20}));
   });
 
+  test('commit and revert addAll() with new and existing keys', () {
+    garden.branch();
+    leaf.addAll({'a': 99, 'c': 3});
+    expect(leaf, equals({'a': 99, 'b': 2, 'c': 3}));
+    garden.revert();
+    expect(leaf, equals({'a': 1, 'b': 2}));
+
+    garden.branch();
+    leaf.addAll({'a': 99, 'c': 3});
+    garden.commit();
+    expect(leaf, equals({'a': 99, 'b': 2, 'c': 3}));
+  });
+
+  test('commit and revert addEntries()', () {
+    garden.branch();
+    leaf.addEntries([MapEntry('b', 99), MapEntry('d', 4)]);
+    expect(leaf, equals({'a': 1, 'b': 99, 'd': 4}));
+    garden.revert();
+    expect(leaf, equals({'a': 1, 'b': 2}));
+  });
+
+  test('commit and revert removeWhere()', () {
+    garden.branch();
+    leaf.removeWhere((key, value) => value.isEven);
+    garden.revert();
+    expect(leaf, equals({'a': 1, 'b': 2}));
+
+    garden.branch();
+    leaf.removeWhere((key, value) => value.isEven);
+    garden.commit();
+    expect(leaf, equals({'a': 1}));
+  });
+
   test('commit and revert update with ifAbsent', () {
     garden.branch();
     final updated = leaf.update('c', (value) => value + 1, ifAbsent: () => 5);

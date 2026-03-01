@@ -14,7 +14,7 @@ const _operations = {
   'value': ['set'],
   'list': ['set', 'add', 'addAll', 'insert', 'insertAll', 'remove', 'removeAt', 'removeRange', 'removeWhere', 'removeWhereSparse', 'removeLast', 'clear'],
   'set': ['add', 'addAll', 'remove', 'removeAll', 'removeWhere', 'clear'],
-  'map': ['set', 'remove', 'update', 'updateAll', 'clear'],
+  'map': ['set', 'addEntries', 'remove', 'removeWhere', 'update', 'updateAll', 'clear'],
 };
 // dart format on
 
@@ -324,9 +324,21 @@ void Function(int i) _build(String type, String operation, int runs, Random rng)
           final values = _generate(runs, rng);
           return (i) => leaf[keys[i]] = values[i];
 
+        case 'addEntries':
+          final batches = List.generate(runs, (_) {
+            final keys = _generate(5, rng, max: 100);
+            final values = _generate(5, rng);
+            return [for (var j = 0; j < 5; j++) MapEntry(keys[j], values[j])];
+          });
+          return (i) => leaf.addEntries(batches[i]);
+
         case 'remove':
           final keys = _generate(runs, rng, max: 100);
           return (i) => leaf.remove(keys[i]);
+
+        case 'removeWhere':
+          final thresholds = _generate(runs, rng, max: 100);
+          return (i) => leaf.removeWhere((key, _) => key < thresholds[i]);
 
         case 'update':
           final keys = _generate(runs, rng, max: 100);
