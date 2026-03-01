@@ -4,93 +4,93 @@
   "records": [
     {
       "name": "value set",
-      "time": 5.696
+      "time": 5.329
     },
     {
       "name": "list set",
-      "time": 3.846
+      "time": 3.742
     },
     {
       "name": "list add",
-      "time": 3.209
+      "time": 3.139
     },
     {
       "name": "list addAll",
-      "time": 8.611
+      "time": 8.591
     },
     {
       "name": "list remove",
-      "time": 28.479
+      "time": 26.726
     },
     {
       "name": "list removeAt",
-      "time": 21.429
+      "time": 22.376
     },
     {
       "name": "list removeRange",
-      "time": 21.801
+      "time": 21.826
     },
     {
       "name": "list removeWhere",
-      "time": 58.872
+      "time": 57.845
     },
     {
       "name": "list removeWhereSparse",
-      "time": 58.041
+      "time": 59.347
     },
     {
       "name": "list removeLast",
-      "time": 3.37
+      "time": 3.27
     },
     {
       "name": "list clear",
-      "time": 17.298
+      "time": 18.013
     },
     {
       "name": "set add",
-      "time": 7.112
+      "time": 6.719
     },
     {
       "name": "set addAll",
-      "time": 37.57
+      "time": 39.731
     },
     {
       "name": "set remove",
-      "time": 4.887
+      "time": 5.268
     },
     {
       "name": "set removeAll",
-      "time": 20.043
+      "time": 18.216
     },
     {
       "name": "set removeWhere",
-      "time": 135.018
+      "time": 130.942
     },
     {
       "name": "set clear",
-      "time": 161.147
+      "time": 162.417
     },
     {
       "name": "map set",
-      "time": 7.94
+      "time": 10.275
     },
     {
       "name": "map remove",
-      "time": 8.082
+      "time": 8.177
     },
     {
       "name": "map update",
-      "time": 7.193
+      "time": 7.3
     },
     {
       "name": "map updateAll",
-      "time": 271.284
+      "time": 273.837
     },
     {
       "name": "map clear",
-      "time": 281.852
+      "time": 283.262
     }
   ],
-  "timestamp": "2026-03-01T18:49:17.494836",
-  "total": 1172.7800000000002
+  "timestamp": "2026-03-01T19:08:55.802626",
+  "total": 1176.348
 }

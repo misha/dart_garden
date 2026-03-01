@@ -57,17 +57,10 @@ class SetLeaf<T> extends DelegatingSet<T> with Leaf {
 
   @override
   void removeWhere(bool Function(T) test) {
-    final removed = <T>[];
-
-    for (final element in toList()) {
-      if (test(element) && super.remove(element)) {
-        removed.add(element);
-      }
-    }
-
-    if (removed.isNotEmpty) {
-      record(() => super.addAll(removed));
-    }
+    final removed = where(test).toList();
+    if (removed.isEmpty) return;
+    super.removeAll(removed);
+    record(() => super.addAll(removed));
   }
 
   @override
