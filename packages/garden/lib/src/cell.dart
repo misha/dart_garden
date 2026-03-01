@@ -4,6 +4,6 @@ import 'package:meta/meta.dart';
 final class Cell {
   const Cell(this.undo, this.version);
 
-  final Function undo;
+  final void Function() undo;
   final int version;
 }

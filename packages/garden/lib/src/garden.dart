@@ -57,7 +57,7 @@ mixin Leaf {
 
   /// Records an inverse mutation to support [Garden.revert].
   @protected
-  void record(Function undo) {
+  void record(void Function() undo) {
     if (!garden.isBranched) return;
     final cell = Cell(undo, garden.version);
     garden.history.add(cell);
