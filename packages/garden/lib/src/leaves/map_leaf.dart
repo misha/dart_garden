@@ -24,24 +24,23 @@ class MapLeaf<K, V> extends DelegatingMap<K, V> with Leaf {
 
   @override
   void addEntries(Iterable<MapEntry<K, V>> newEntries) {
-    final overwritten = <K, V>{};
     final added = <K>[];
+    final overwritten = <MapEntry<K, V>>[];
 
     for (final MapEntry(:key, :value) in newEntries) {
       if (containsKey(key)) {
-        overwritten.putIfAbsent(key, () => super[key] as V);
+        overwritten.add(.new(key, super[key] as V));
       } else {
         added.add(key);
       }
+
       super[key] = value;
     }
 
-    if (overwritten.isNotEmpty || added.isNotEmpty) {
+    if (added.isNotEmpty || overwritten.isNotEmpty) {
       record(() {
-        super.addAll(overwritten);
-        for (final key in added) {
-          super.remove(key);
-        }
+        super.addEntries(overwritten);
+        added.forEach(super.remove);
       });
     }
   }
@@ -59,13 +58,17 @@ class MapLeaf<K, V> extends DelegatingMap<K, V> with Leaf {
 
   @override
   void removeWhere(bool Function(K, V) test) {
-    final removed = <K, V>{};
-    for (final MapEntry(:key, :value) in entries) {
-      if (test(key, value)) removed[key] = value;
+    final removed = <MapEntry<K, V>>[];
+
+    for (final entry in entries) {
+      if (test(entry.key, entry.value)) {
+        removed.add(entry);
+      }
     }
+
     if (removed.isEmpty) return;
-    removed.forEach((key, _) => super.remove(key));
-    record(() => super.addAll(removed));
+    removed.forEach((entry) => super.remove(entry.key));
+    record(() => super.addEntries(removed));
   }
 
   @override
