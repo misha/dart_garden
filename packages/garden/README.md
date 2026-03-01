@@ -50,7 +50,7 @@ Lastly, all private fields of `Garden` and `Leaf` are marked `@protected` if you
 
 The undo functionality stores function pointers, minimizing allocations at the cost of serialization. This makes `garden` a good choice for in-memory simulations, but a poor one for use cases that require saving the undo stack to disk for subsequent continuation.
 
-For serialization of the values themselves, unfortunately `json_serializable` does not support generic classes. `dogs` is a fantastic alternative that does. For fast, transparent serialization, use `garden_dogs` and import its `GardenPlugin` into your [`dogs`](https://pub.dev/packages/dogs) instance.
+For serialization of the values themselves, unfortunately `json_serializable` does not support generic classes. `dogs` is a fantastic alternative that does. For fast, transparent serialization, use `garden_dogs` and import its `GardenPlugin` into your [`dogs`](https://pub.dev/packages/dogs_core) instance.
 
 Note that this still does *not* serialize the undo stack.
 

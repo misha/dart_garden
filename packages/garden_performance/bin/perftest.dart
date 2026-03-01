@@ -42,8 +42,8 @@ class PerformanceRecord {
     required this.records,
     DateTime? timestamp,
     double? total,
-  })  : timestamp = timestamp ?? DateTime.now(),
-        total = total ?? records.fold(0.0, (sum, r) => sum + r.time);
+  }) : timestamp = timestamp ?? DateTime.now(),
+       total = total ?? records.fold(0.0, (sum, r) => sum + r.time);
 
   final int runs;
   final int seed;

@@ -9,14 +9,8 @@ dependencies:
   collection: ^1.19.1
   meta: ^1.16.0
 dev_dependencies:
-  args: ^2.7.0
-  build_runner: ^2.4.15
-  json_annotation: ^4.9.0
-  json_serializable: ^6.9.5
   lints: ^6.0.0
   test: ^1.29.0
 scripts:
   analyze: dart analyze
-  build: dart run build_runner build --delete-conflicting-outputs
-  perftest: dart run bin/perftest.dart
   test: dart test

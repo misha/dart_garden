@@ -6,11 +6,12 @@ The main package documentation can be found [here](packages/garden).
 
 ## Packages
 
-| Package                                           | Description                                |
-|---------------------------------------------------|--------------------------------------------|
-| [`garden`](packages/garden)                       | Branching data structure library for Dart. |
-| [`garden_dogs`](packages/garden_dogs)             | `dogs` serialization support for `garden`. |
-| [`example_tictactoe`](packages/example_tictactoe) | Tic-Tac-Toe example built on `garden`.     |
+| Package                                             | Description                                |
+|-----------------------------------------------------|--------------------------------------------|
+| [`garden`](packages/garden)                         | Branching data structure library for Dart. |
+| [`garden_dogs`](packages/garden_dogs)               | `dogs` serialization support for `garden`. |
+| [`garden_performance`](packages/garden_performance) | Performance benchmarks for `garden`.       |
+| [`example_tictactoe`](packages/example_tictactoe)   | Tic-Tac-Toe example built on `garden`.     |
 
 ## Development
 

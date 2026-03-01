@@ -12,6 +12,10 @@
       "name": "dogs",
     },
     {
+      "path": "packages/garden_performance",
+      "name": "performance",
+    },
+    {
       "path": "packages/example_tictactoe",
       "name": "tictactoe (example)",
     },
