@@ -82,6 +82,22 @@ void main() {
     expect(big, equals({0, 1, 2, 3, 4, 5}));
   });
 
+  test('revert retainWhere()', () {
+    garden.branch();
+    leaf.retainWhere((value) => value.isOdd);
+    expect(leaf, equals({1, 3}));
+    garden.revert();
+    expect(leaf, equals({1, 2, 3}));
+  });
+
+  test('revert retainAll()', () {
+    garden.branch();
+    leaf.retainAll([1, 3, 99]);
+    expect(leaf, equals({1, 3}));
+    garden.revert();
+    expect(leaf, equals({1, 2, 3}));
+  });
+
   test('commit and revert clear()', () {
     garden.branch();
     leaf.clear();

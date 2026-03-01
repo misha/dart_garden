@@ -56,6 +56,17 @@ class SetLeaf<T> extends DelegatingSet<T> with Leaf {
   }
 
   @override
+  void retainWhere(bool Function(T) test) {
+    removeWhere((element) => !test(element));
+  }
+
+  @override
+  void retainAll(Iterable<Object?> elements) {
+    final keep = elements.toSet();
+    removeWhere((element) => !keep.contains(element));
+  }
+
+  @override
   void removeWhere(bool Function(T) test) {
     final removed = where(test).toList();
     if (removed.isEmpty) return;
