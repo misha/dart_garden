@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.0
+
+- Fix a link in README.md.
+
 ## 1.0.0
 
 - Initial release.
