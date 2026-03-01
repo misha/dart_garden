@@ -68,7 +68,7 @@ class ListLeaf<T> extends DelegatingList<T> with Leaf {
     final values = removed.values;
 
     record(() {
-      for (var i = indices.length - 1; i >= 0; i -= 1) {
+      for (var i = 0; i < indices.length; i += 1) {
         super.insert(indices[i], values[i]);
       }
     });

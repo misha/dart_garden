@@ -107,6 +107,15 @@ void main() {
       garden.commit();
       expect(leaf, equals([1, 3]));
     });
+
+    test('revert removeWhere() with multiple removals', () {
+      final big = garden.grow(() => ListLeaf([0, 1, 2, 3, 4, 5]));
+      garden.branch();
+      big.removeWhere((value) => value.isEven);
+      expect(big, equals([1, 3, 5]));
+      garden.revert();
+      expect(big, equals([0, 1, 2, 3, 4, 5]));
+    });
   });
 
   group('map leaf', () {
