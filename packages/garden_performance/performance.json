@@ -4,85 +4,93 @@
   "records": [
     {
       "name": "value set",
-      "time": 5.227
+      "time": 5.696
     },
     {
       "name": "list set",
-      "time": 3.712
+      "time": 3.846
     },
     {
       "name": "list add",
-      "time": 3.471
+      "time": 3.209
     },
     {
       "name": "list addAll",
-      "time": 9.119
+      "time": 8.611
     },
     {
       "name": "list remove",
-      "time": 27.657
+      "time": 28.479
     },
     {
       "name": "list removeAt",
-      "time": 21.945
+      "time": 21.429
     },
     {
       "name": "list removeRange",
-      "time": 22.806
+      "time": 21.801
     },
     {
       "name": "list removeWhere",
-      "time": 60.253
+      "time": 58.872
     },
     {
       "name": "list removeWhereSparse",
-      "time": 41.431
+      "time": 58.041
     },
     {
       "name": "list removeLast",
-      "time": 3.122
+      "time": 3.37
     },
     {
       "name": "list clear",
-      "time": 17.324
+      "time": 17.298
     },
     {
       "name": "set add",
-      "time": 7.356
+      "time": 7.112
     },
     {
       "name": "set addAll",
-      "time": 35.724
+      "time": 37.57
     },
     {
       "name": "set remove",
-      "time": 5.117
+      "time": 4.887
+    },
+    {
+      "name": "set removeAll",
+      "time": 20.043
+    },
+    {
+      "name": "set removeWhere",
+      "time": 135.018
     },
     {
       "name": "set clear",
-      "time": 183.751
+      "time": 161.147
     },
     {
       "name": "map set",
-      "time": 8.263
+      "time": 7.94
     },
     {
       "name": "map remove",
-      "time": 9.696
+      "time": 8.082
     },
     {
       "name": "map update",
-      "time": 6.224
+      "time": 7.193
     },
     {
       "name": "map updateAll",
-      "time": 289.168
+      "time": 271.284
     },
     {
       "name": "map clear",
-      "time": 275.717
+      "time": 281.852
     }
   ],
-  "timestamp": "2026-03-01T18:37:54.601657",
-  "total": 1037.083
+  "timestamp": "2026-03-01T18:49:17.494836",
+  "total": 1172.7800000000002
 }

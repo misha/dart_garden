@@ -13,7 +13,7 @@ part 'perftest.g.dart';
 const _operations = {
   'value': ['set'],
   'list': ['set', 'add', 'addAll', 'remove', 'removeAt', 'removeRange', 'removeWhere', 'removeWhereSparse', 'removeLast', 'clear'],
-  'set': ['add', 'addAll', 'remove', 'clear'],
+  'set': ['add', 'addAll', 'remove', 'removeAll', 'removeWhere', 'clear'],
   'map': ['set', 'remove', 'update', 'updateAll', 'clear'],
 };
 // dart format on
@@ -258,8 +258,8 @@ void Function(int i) _build(String type, String operation, int runs, Random rng)
           return (i) => leaf.removeWhere((element) => element < thresholds[i]);
 
         case 'removeWhereSparse':
-          final pick = rng.nextInt(101);
-          return (i) => leaf.removeWhereSparse((element) => element == pick);
+          final picks = _generate(runs, rng, max: 100).shuffled(rng);
+          return (i) => leaf.removeWhereSparse((element) => element == picks[i]);
 
         case 'removeLast':
           return (_) => leaf.removeLast();
@@ -286,6 +286,14 @@ void Function(int i) _build(String type, String operation, int runs, Random rng)
         case 'remove':
           final targets = _generate(runs, rng, max: 100);
           return (i) => leaf.remove(targets[i]);
+
+        case 'removeAll':
+          final batches = List.generate(runs, (_) => _generate(5, rng, max: 100));
+          return (i) => leaf.removeAll(batches[i]);
+
+        case 'removeWhere':
+          final thresholds = _generate(runs, rng, max: 100);
+          return (i) => leaf.removeWhere((element) => element < thresholds[i]);
 
         case 'clear':
           return (_) => leaf.clear();

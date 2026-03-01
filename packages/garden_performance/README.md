@@ -28,7 +28,7 @@ The available leaves and their operations are as follows:
 |---------|------------------------------------------------------------------------|
 | `value` | `set`                                                                  |
 | `list`  | `set`, `add`, `addAll`, `remove`, `removeAt`, `removeRange`, `removeWhere`, `removeWhereSparse`, `removeLast`, `clear` |
-| `set`   | `add`, `addAll`, `remove`, `clear`                                     |
+| `set`   | `add`, `addAll`, `remove`, `removeAll`, `removeWhere`, `clear`                      |
 | `map`   | `set`, `remove`, `update`, `updateAll`, `clear`                        |
 
 ## Options

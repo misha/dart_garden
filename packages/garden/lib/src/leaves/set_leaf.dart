@@ -42,12 +42,32 @@ class SetLeaf<T> extends DelegatingSet<T> with Leaf {
 
   @override
   void removeAll(Iterable<Object?> elements) {
-    throw UnimplementedError();
+    final removed = <T>[];
+
+    for (final element in elements) {
+      if (super.remove(element)) {
+        removed.add(element as T);
+      }
+    }
+
+    if (removed.isNotEmpty) {
+      record(() => super.addAll(removed));
+    }
   }
 
   @override
   void removeWhere(bool Function(T) test) {
-    throw UnimplementedError();
+    final removed = <T>[];
+
+    for (final element in toList()) {
+      if (test(element) && super.remove(element)) {
+        removed.add(element);
+      }
+    }
+
+    if (removed.isNotEmpty) {
+      record(() => super.addAll(removed));
+    }
   }
 
   @override
