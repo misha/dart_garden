@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:collection/collection.dart';
 import 'package:garden/src/garden.dart';
 
@@ -81,6 +83,60 @@ class ListLeaf<T> extends DelegatingList<T> with Leaf {
     });
   }
 
+  @override
+  void retainWhere(bool Function(T) test) {
+    removeWhere((element) => !test(element));
+  }
+
+  @override
+  void sort([int Function(T a, T b)? compare]) {
+    final backup = toList();
+    super.sort(compare);
+    record(() => super.setAll(0, backup));
+  }
+
+  @override
+  void setAll(int index, Iterable<T> iterable) {
+    final items = iterable.toList();
+    final backup = sublist(index, index + items.length);
+    super.setAll(index, items);
+    record(() => super.setAll(index, backup));
+  }
+
+  @override
+  void setRange(int start, int end, Iterable<T> iterable, [int skipCount = 0]) {
+    final backup = sublist(start, end);
+    super.setRange(start, end, iterable, skipCount);
+    record(() => super.setRange(start, end, backup));
+  }
+
+  @override
+  void fillRange(int start, int end, [T? fillValue]) {
+    final backup = sublist(start, end);
+    super.fillRange(start, end, fillValue);
+    record(() => super.setRange(start, end, backup));
+  }
+
+  @override
+  void replaceRange(int start, int end, Iterable<T> replacements) {
+    final backup = sublist(start, end);
+    final before = length;
+    super.replaceRange(start, end, replacements);
+    final newEnd = end + length - before;
+
+    record(() {
+      super.removeRange(start, newEnd);
+      super.insertAll(start, backup);
+    });
+  }
+
+  @override
+  void shuffle([Random? random]) {
+    final backup = toList();
+    super.shuffle(random);
+    record(() => super.setAll(0, backup));
+  }
+
   /// Like [removeWhere], but without copying the entire list for undo.
   ///
   /// Use this for large lists where the memory cost of a full backup is
@@ -108,6 +164,17 @@ class ListLeaf<T> extends DelegatingList<T> with Leaf {
     final backup = sublist(start, end);
     super.removeRange(start, end);
     record(() => super.insertAll(start, backup));
+  }
+
+  @override
+  set length(int newLength) {
+    if (newLength < length) {
+      final backup = sublist(newLength);
+      super.length = newLength;
+      record(() => super.addAll(backup));
+    } else {
+      super.length = newLength;
+    }
   }
 
   @override

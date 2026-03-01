@@ -147,7 +147,7 @@ void main() {
     expect(leaf, equals([1, 2, 3]));
   });
 
-  test('revert retainWhere()', skip: 'unimplemented', () {
+  test('revert retainWhere()', () {
     garden.branch();
     leaf.retainWhere((value) => value.isOdd);
     expect(leaf, equals([1, 3]));
@@ -155,7 +155,7 @@ void main() {
     expect(leaf, equals([1, 2, 3]));
   });
 
-  test('revert sort()', skip: 'unimplemented', () {
+  test('revert sort()', () {
     final unsorted = garden.grow(() => ListLeaf([3, 1, 2]));
     garden.branch();
     unsorted.sort();
@@ -164,7 +164,7 @@ void main() {
     expect(unsorted, equals([3, 1, 2]));
   });
 
-  test('revert shuffle()', skip: 'unimplemented', () {
+  test('revert shuffle()', () {
     final big = garden.grow(() => ListLeaf([1, 2, 3, 4, 5, 6, 7, 8]));
     final original = big.toList();
     garden.branch();
@@ -189,7 +189,7 @@ void main() {
     expect(leaf, equals([1, 2, 3]));
   });
 
-  test('revert setAll()', skip: 'unimplemented', () {
+  test('revert setAll()', () {
     garden.branch();
     leaf.setAll(1, [88, 99]);
     expect(leaf, equals([1, 88, 99]));
@@ -197,7 +197,7 @@ void main() {
     expect(leaf, equals([1, 2, 3]));
   });
 
-  test('revert setRange()', skip: 'unimplemented', () {
+  test('revert setRange()', () {
     garden.branch();
     leaf.setRange(0, 2, [88, 99]);
     expect(leaf, equals([88, 99, 3]));
@@ -205,7 +205,7 @@ void main() {
     expect(leaf, equals([1, 2, 3]));
   });
 
-  test('revert fillRange()', skip: 'unimplemented', () {
+  test('revert fillRange()', () {
     garden.branch();
     leaf.fillRange(0, 2, 0);
     expect(leaf, equals([0, 0, 3]));
@@ -213,7 +213,7 @@ void main() {
     expect(leaf, equals([1, 2, 3]));
   });
 
-  test('revert replaceRange()', skip: 'unimplemented', () {
+  test('revert replaceRange()', () {
     garden.branch();
     leaf.replaceRange(0, 2, [88, 99, 100]);
     expect(leaf, equals([88, 99, 100, 3]));
@@ -221,7 +221,7 @@ void main() {
     expect(leaf, equals([1, 2, 3]));
   });
 
-  test('revert length=', skip: 'unimplemented', () {
+  test('revert length=', () {
     garden.branch();
     leaf.length = 2;
     expect(leaf, equals([1, 2]));
