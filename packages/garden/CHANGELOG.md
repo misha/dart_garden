@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.2.0
+
+- Fill in remaining, unimplemented mutations in `ListLeaf`, `SetLeaf`, and `MapLeaf`.
+- Perform optimization for the newly implemented mutations.
+- Update README.md.
+
 ## 1.1.1
 
 - Performance optimizations.
