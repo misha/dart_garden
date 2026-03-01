@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.1
+
+- Performance optimizations.
+
 ## 1.1.0
 
 - Fixed several bugs in `ListLeaf`, `SetLeaf`, and `MapLeaf`.
