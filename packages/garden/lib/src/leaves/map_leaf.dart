@@ -47,7 +47,7 @@ class MapLeaf<K, V> extends DelegatingMap<K, V> with Leaf {
   @override
   V update(K key, V Function(V) update, {V Function()? ifAbsent}) {
     final hadValue = containsKey(key);
-    final previousValue = this[key];
+    final previousValue = super[key];
     final newValue = super.update(key, update, ifAbsent: ifAbsent);
 
     if (hadValue) {
@@ -61,15 +61,21 @@ class MapLeaf<K, V> extends DelegatingMap<K, V> with Leaf {
 
   @override
   void updateAll(V Function(K, V) update) {
-    for (final entry in entries.toList()) {
-      this[entry.key] = update(entry.key, entry.value);
-    }
+    if (isEmpty) return;
+    final backup = Map.of(this);
+    super.updateAll(update);
+
+    record(() {
+      for (final entry in backup.entries) {
+        super[entry.key] = entry.value;
+      }
+    });
   }
 
   @override
   void clear() {
     if (isEmpty) return;
-    final backup = Map<K, V>.unmodifiable(this);
+    final backup = Map.of(this);
     record(() => super.addAll(backup));
     super.clear();
   }

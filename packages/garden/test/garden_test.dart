@@ -118,6 +118,58 @@ void main() {
     });
   });
 
+  group('set leaf', () {
+    late SetLeaf<int> leaf;
+
+    setUp(() {
+      leaf = garden.grow(() => SetLeaf({1, 2, 3}));
+    });
+
+    test('commit and revert add()', () {
+      garden.branch();
+      leaf.add(4);
+      garden.revert();
+      expect(leaf, equals({1, 2, 3}));
+
+      garden.branch();
+      leaf.add(4);
+      garden.commit();
+      expect(leaf, equals({1, 2, 3, 4}));
+    });
+
+    test('commit and revert remove()', () {
+      garden.branch();
+      expect(leaf.remove(2), isTrue);
+      garden.revert();
+      expect(leaf, equals({1, 2, 3}));
+
+      garden.branch();
+      leaf.remove(2);
+      garden.commit();
+      expect(leaf, equals({1, 3}));
+    });
+
+    test('commit and revert addAll() with overlapping elements', () {
+      garden.branch();
+      leaf.addAll([2, 3, 4, 5]);
+      expect(leaf, equals({1, 2, 3, 4, 5}));
+      garden.revert();
+      expect(leaf, equals({1, 2, 3}));
+    });
+
+    test('commit and revert clear()', () {
+      garden.branch();
+      leaf.clear();
+      garden.revert();
+      expect(leaf, equals({1, 2, 3}));
+
+      garden.branch();
+      leaf.clear();
+      garden.commit();
+      expect(leaf, isEmpty);
+    });
+  });
+
   group('map leaf', () {
     late MapLeaf<String, int> leaf;
 
@@ -192,6 +244,19 @@ void main() {
       leaf.update('a', (value) => value + 1);
       garden.commit();
       expect(leaf['a'], equals(2));
+    });
+
+    test('commit and revert updateAll()', () {
+      garden.branch();
+      leaf.updateAll((key, value) => value * 10);
+      expect(leaf, equals({'a': 10, 'b': 20}));
+      garden.revert();
+      expect(leaf, equals({'a': 1, 'b': 2}));
+
+      garden.branch();
+      leaf.updateAll((key, value) => value * 10);
+      garden.commit();
+      expect(leaf, equals({'a': 10, 'b': 20}));
     });
 
     test('commit and revert update with ifAbsent', () {

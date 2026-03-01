@@ -8,7 +8,7 @@ class ValueLeaf<T> with Leaf {
   T get value => _value;
 
   set value(T updated) {
-    final backup = value;
+    final backup = _value;
     record(() => _value = backup);
     _value = updated;
   }

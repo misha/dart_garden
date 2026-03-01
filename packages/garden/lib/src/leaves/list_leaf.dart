@@ -20,11 +20,11 @@ class ListLeaf<T> extends DelegatingList<T> with Leaf {
 
   @override
   void addAll(Iterable<T> iterable) {
-    if (iterable.isEmpty) return;
     final start = length;
-    final values = iterable.toList();
-    super.addAll(values);
-    record(() => super.removeRange(start, start + values.length));
+    super.addAll(iterable);
+    final end = length;
+    if (start == end) return;
+    record(() => super.removeRange(start, end));
   }
 
   @override
@@ -91,7 +91,7 @@ class ListLeaf<T> extends DelegatingList<T> with Leaf {
   @override
   void clear() {
     if (isEmpty) return;
-    final backup = List<T>.unmodifiable(this);
+    final backup = toList();
     record(() => super.addAll(backup));
     super.clear();
   }

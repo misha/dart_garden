@@ -26,7 +26,7 @@ class SetLeaf<T> extends DelegatingSet<T> with Leaf {
     }
 
     if (added.isNotEmpty) {
-      record(() => super.removeAll(elements));
+      record(() => super.removeAll(added));
     }
   }
 
@@ -53,7 +53,7 @@ class SetLeaf<T> extends DelegatingSet<T> with Leaf {
   @override
   void clear() {
     if (isEmpty) return;
-    final backup = List<T>.unmodifiable(this);
+    final backup = toList();
     record(() => super.addAll(backup));
     super.clear();
   }
