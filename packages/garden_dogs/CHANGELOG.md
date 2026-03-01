@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.0.0
+
+- Adds `RngLeaf` support.
+- Implements round-trip tests.
+
 ## 1.1.0
 
 - Fix a link in README.md.

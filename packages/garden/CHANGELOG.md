@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.0
+
+- Implements an `RngLeaf` using the `chaos` package.
+- Adds various tests and scripts.
+- Overhauls the README.md.
+
 ## 1.2.0
 
 - Fill in remaining, unimplemented mutations in `ListLeaf`, `SetLeaf`, and `MapLeaf`.
