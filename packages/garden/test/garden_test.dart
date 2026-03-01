@@ -116,6 +116,27 @@ void main() {
       garden.revert();
       expect(big, equals([0, 1, 2, 3, 4, 5]));
     });
+
+    test('commit and revert removeWhereSparse()', () {
+      garden.branch();
+      leaf.removeWhereSparse((value) => value.isEven);
+      garden.revert();
+      expect(leaf, equals([1, 2, 3]));
+
+      garden.branch();
+      leaf.removeWhereSparse((value) => value.isEven);
+      garden.commit();
+      expect(leaf, equals([1, 3]));
+    });
+
+    test('revert removeWhereSparse() with multiple removals', () {
+      final big = garden.grow(() => ListLeaf([0, 1, 2, 3, 4, 5]));
+      garden.branch();
+      big.removeWhereSparse((value) => value.isEven);
+      expect(big, equals([1, 3, 5]));
+      garden.revert();
+      expect(big, equals([0, 1, 2, 3, 4, 5]));
+    });
   });
 
   group('set leaf', () {

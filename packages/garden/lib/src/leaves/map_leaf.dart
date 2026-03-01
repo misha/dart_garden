@@ -46,30 +46,27 @@ class MapLeaf<K, V> extends DelegatingMap<K, V> with Leaf {
 
   @override
   V update(K key, V Function(V) update, {V Function()? ifAbsent}) {
-    final hadValue = containsKey(key);
-    final previousValue = super[key];
-    final newValue = super.update(key, update, ifAbsent: ifAbsent);
-
-    if (hadValue) {
-      record(() => super[key] = previousValue as V);
-    } else {
+    if (containsKey(key)) {
+      final backup = super[key] as V;
+      final value = super[key] = update(backup);
+      record(() => super[key] = backup);
+      return value;
+    } else if (ifAbsent != null) {
+      final value = ifAbsent();
+      super[key] = value;
       record(() => super.remove(key));
+      return value;
+    } else {
+      throw ArgumentError.value(key, 'key', 'Key not in map.');
     }
-
-    return newValue;
   }
 
   @override
   void updateAll(V Function(K, V) update) {
     if (isEmpty) return;
-    final backup = Map.of(this);
+    final backup = entries.toList();
     super.updateAll(update);
-
-    record(() {
-      for (final entry in backup.entries) {
-        super[entry.key] = entry.value;
-      }
-    });
+    record(() => super.addEntries(backup));
   }
 
   @override
