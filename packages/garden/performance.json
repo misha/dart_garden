@@ -1,0 +1,76 @@
+{
+  "runs": 100000,
+  "seed": 12345,
+  "records": [
+    {
+      "name": "value set",
+      "time": 5.93
+    },
+    {
+      "name": "list set",
+      "time": 3.905
+    },
+    {
+      "name": "list add",
+      "time": 3.381
+    },
+    {
+      "name": "list addAll",
+      "time": 11.79
+    },
+    {
+      "name": "list remove",
+      "time": 26.944
+    },
+    {
+      "name": "list removeWhere",
+      "time": 322.428
+    },
+    {
+      "name": "list removeLast",
+      "time": 3.34
+    },
+    {
+      "name": "list clear",
+      "time": 52.85
+    },
+    {
+      "name": "set add",
+      "time": 7.152
+    },
+    {
+      "name": "set addAll",
+      "time": 37.484
+    },
+    {
+      "name": "set remove",
+      "time": 5.225
+    },
+    {
+      "name": "set clear",
+      "time": 177.504
+    },
+    {
+      "name": "map set",
+      "time": 8.529
+    },
+    {
+      "name": "map remove",
+      "time": 7.992
+    },
+    {
+      "name": "map update",
+      "time": 9.928
+    },
+    {
+      "name": "map updateAll",
+      "time": 518.392
+    },
+    {
+      "name": "map clear",
+      "time": 532.324
+    }
+  ],
+  "timestamp": "2026-03-01T13:53:33.623873",
+  "total": 1735.098
+}
