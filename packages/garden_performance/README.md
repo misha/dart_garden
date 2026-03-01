@@ -27,7 +27,7 @@ The available leaves and their operations are as follows:
 | Leaf    | Operations                                                             |
 |---------|------------------------------------------------------------------------|
 | `value` | `set`                                                                  |
-| `list`  | `set`, `add`, `addAll`, `remove`, `removeAt`, `removeRange`, `removeWhere`, `removeWhereSparse`, `removeLast`, `clear` |
+| `list`  | `set`, `add`, `addAll`, `insert`, `insertAll`, `remove`, `removeAt`, `removeRange`, `removeWhere`, `removeWhereSparse`, `removeLast`, `clear` |
 | `set`   | `add`, `addAll`, `remove`, `removeAll`, `removeWhere`, `clear`                      |
 | `map`   | `set`, `remove`, `update`, `updateAll`, `clear`                        |
 

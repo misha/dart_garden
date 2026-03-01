@@ -131,7 +131,7 @@ void main() {
     expect(big, equals([0, 1, 2, 3, 4, 5]));
   });
 
-  test('revert insert()', skip: 'unimplemented', () {
+  test('revert insert()',() {
     garden.branch();
     leaf.insert(1, 99);
     expect(leaf, equals([1, 99, 2, 3]));
@@ -139,7 +139,7 @@ void main() {
     expect(leaf, equals([1, 2, 3]));
   });
 
-  test('revert insertAll()', skip: 'unimplemented', () {
+  test('revert insertAll()',() {
     garden.branch();
     leaf.insertAll(1, [88, 99]);
     expect(leaf, equals([1, 88, 99, 2, 3]));

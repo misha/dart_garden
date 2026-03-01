@@ -28,6 +28,22 @@ class ListLeaf<T> extends DelegatingList<T> with Leaf {
   }
 
   @override
+  void insert(int index, T element) {
+    super.insert(index, element);
+    record(() => super.removeAt(index));
+  }
+
+  @override
+  void insertAll(int index, Iterable<T> iterable) {
+    final before = length;
+    super.insertAll(index, iterable);
+    final after = length;
+    if (before == after) return;
+    final count = after - before;
+    record(() => super.removeRange(index, index + count));
+  }
+
+  @override
   bool remove(Object? value) {
     if (value is! T) return false;
     final index = super.indexOf(value);

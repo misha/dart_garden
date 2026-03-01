@@ -12,7 +12,7 @@ part 'perftest.g.dart';
 // dart format off
 const _operations = {
   'value': ['set'],
-  'list': ['set', 'add', 'addAll', 'remove', 'removeAt', 'removeRange', 'removeWhere', 'removeWhereSparse', 'removeLast', 'clear'],
+  'list': ['set', 'add', 'addAll', 'insert', 'insertAll', 'remove', 'removeAt', 'removeRange', 'removeWhere', 'removeWhereSparse', 'removeLast', 'clear'],
   'set': ['add', 'addAll', 'remove', 'removeAll', 'removeWhere', 'clear'],
   'map': ['set', 'remove', 'update', 'updateAll', 'clear'],
 };
@@ -239,6 +239,16 @@ void Function(int i) _build(String type, String operation, int runs, Random rng)
         case 'addAll':
           final batches = List.generate(runs, (_) => _generate(10, rng));
           return (i) => leaf.addAll(batches[i]);
+
+        case 'insert':
+          final insertIndices = _generate(runs, rng, max: 100);
+          final insertValues = _generate(runs, rng);
+          return (i) => leaf.insert(insertIndices[i], insertValues[i]);
+
+        case 'insertAll':
+          final insertAllIndices = _generate(runs, rng, max: 100);
+          final insertAllBatches = List.generate(runs, (_) => _generate(10, rng));
+          return (i) => leaf.insertAll(insertAllIndices[i], insertAllBatches[i]);
 
         case 'remove':
           final targets = _generate(runs, rng, max: 100);
