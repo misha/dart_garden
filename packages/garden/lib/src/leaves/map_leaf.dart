@@ -30,12 +30,11 @@ class MapLeaf<K, V> extends DelegatingMap<K, V> with Leaf {
   @override
   V? remove(Object? key) {
     if (key is! K) return null;
+    final before = length;
     final value = super.remove(key);
-
-    if (value != null) {
-      record(() => super[key] = value);
-    }
-
+    final after = length;
+    if (before == after) return null;
+    record(() => super[key] = value as V);
     return value;
   }
 

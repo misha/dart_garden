@@ -54,6 +54,16 @@ void main() {
     expect(leaf.containsKey('a'), isFalse);
   });
 
+  test('revert remove() with null value', () {
+    final leaf = garden.grow(() => MapLeaf<String, int?>({'a': null}));
+    garden.branch();
+    expect(leaf.remove('a'), isNull);
+    expect(leaf.containsKey('a'), isFalse);
+    garden.revert();
+    expect(leaf.containsKey('a'), isTrue);
+    expect(leaf['a'], isNull);
+  });
+
   test('commit and revert clear()', () {
     garden.branch();
     leaf.clear();
