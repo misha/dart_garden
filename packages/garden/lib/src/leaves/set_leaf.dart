@@ -1,14 +1,32 @@
-import 'package:collection/collection.dart';
+import 'dart:collection';
+
 import 'package:garden/src/garden.dart';
 
 /// A [Leaf] set implementation with branch-aware undo recording.
-class SetLeaf<T> extends DelegatingSet<T> with Leaf {
-  SetLeaf([Iterable<T>? data]) : super(data?.toSet() ?? <T>{});
+class SetLeaf<T> with SetMixin<T>, Leaf {
+  SetLeaf([Iterable<T>? data]) : _delegate = data?.toSet() ?? <T>{};
+
+  Set<T> _delegate;
+
+  @override
+  Iterator<T> get iterator => _delegate.iterator;
+
+  @override
+  int get length => _delegate.length;
+
+  @override
+  bool contains(Object? element) => _delegate.contains(element);
+
+  @override
+  T? lookup(Object? element) => _delegate.lookup(element);
+
+  @override
+  Set<T> toSet() => _delegate.toSet();
 
   @override
   bool add(T value) {
-    if (super.add(value)) {
-      record(() => super.remove(value));
+    if (_delegate.add(value)) {
+      record(() => _delegate.remove(value));
       return true;
     } else {
       return false;
@@ -20,20 +38,20 @@ class SetLeaf<T> extends DelegatingSet<T> with Leaf {
     final added = <T>[];
 
     for (final element in elements) {
-      if (super.add(element)) {
+      if (_delegate.add(element)) {
         added.add(element);
       }
     }
 
     if (added.isNotEmpty) {
-      record(() => super.removeAll(added));
+      record(() => _delegate.removeAll(added));
     }
   }
 
   @override
   bool remove(Object? value) {
-    if (super.remove(value)) {
-      record(() => super.add(value as T));
+    if (_delegate.remove(value)) {
+      record(() => _delegate.add(value as T));
       return true;
     } else {
       return false;
@@ -45,13 +63,13 @@ class SetLeaf<T> extends DelegatingSet<T> with Leaf {
     final removed = <T>[];
 
     for (final element in elements) {
-      if (super.remove(element)) {
+      if (_delegate.remove(element)) {
         removed.add(element as T);
       }
     }
 
     if (removed.isNotEmpty) {
-      record(() => super.addAll(removed));
+      record(() => _delegate.addAll(removed));
     }
   }
 
@@ -70,15 +88,15 @@ class SetLeaf<T> extends DelegatingSet<T> with Leaf {
   void removeWhere(bool Function(T) test) {
     final removed = where(test).toList();
     if (removed.isEmpty) return;
-    super.removeAll(removed);
-    record(() => super.addAll(removed));
+    _delegate.removeAll(removed);
+    record(() => _delegate.addAll(removed));
   }
 
   @override
   void clear() {
-    if (isEmpty) return;
-    final backup = toList();
-    record(() => super.addAll(backup));
-    super.clear();
+    if (_delegate.isEmpty) return;
+    final backup = _delegate;
+    _delegate = {};
+    record(() => _delegate = backup);
   }
 }
