@@ -21,8 +21,8 @@ sealed class RelationLeaf<K, V> with Leaf {
 
   final bool _uniqueKeys;
   final bool _uniqueValues;
-  final Map<K, Set<V>> _forward = {};
-  final Map<V, Set<K>> _reverse = {};
+  Map<K, Set<V>> _forward = {};
+  Map<V, Set<K>> _reverse = {};
   int _length = 0;
 
   bool _addRaw(K key, V value) {
@@ -187,16 +187,16 @@ sealed class RelationLeaf<K, V> with Leaf {
   /// Removes all pairs.
   void clear() {
     if (_forward.isEmpty) return;
-    final forwardBackup = Map.of(_forward);
-    final reverseBackup = Map.of(_reverse);
+    final forwardBackup = _forward;
+    final reverseBackup = _reverse;
     final lengthBackup = _length;
-    _forward.clear();
-    _reverse.clear();
+    _forward = {};
+    _reverse = {};
     _length = 0;
 
     record(() {
-      _forward.addAll(forwardBackup);
-      _reverse.addAll(reverseBackup);
+      _forward = forwardBackup;
+      _reverse = reverseBackup;
       _length = lengthBackup;
     });
   }
