@@ -51,6 +51,8 @@ sealed class RelationLeaf<K, V> with Leaf {
     final values = _forward.remove(key);
     if (values == null) return const {};
 
+    _length -= values.length;
+
     for (final value in values) {
       final rSet = _reverse[value]!;
       rSet.remove(key);
@@ -63,6 +65,8 @@ sealed class RelationLeaf<K, V> with Leaf {
   Set<K> _removeValueRaw(V value) {
     final keys = _reverse.remove(value);
     if (keys == null) return const {};
+
+    _length -= keys.length;
 
     for (final key in keys) {
       final fSet = _forward[key]!;
@@ -152,8 +156,11 @@ sealed class RelationLeaf<K, V> with Leaf {
     if (removed.isEmpty) return removed;
 
     record(() {
+      _forward[key] = removed;
+      _length += removed.length;
+
       for (final value in removed) {
-        _addRaw(key, value);
+        (_reverse[value] ??= {}).add(key);
       }
     });
 
@@ -166,8 +173,11 @@ sealed class RelationLeaf<K, V> with Leaf {
     if (removed.isEmpty) return removed;
 
     record(() {
+      _reverse[value] = removed;
+      _length += removed.length;
+
       for (final key in removed) {
-        _addRaw(key, value);
+        (_forward[key] ??= {}).add(value);
       }
     });
 
@@ -177,15 +187,17 @@ sealed class RelationLeaf<K, V> with Leaf {
   /// Removes all pairs.
   void clear() {
     if (_forward.isEmpty) return;
-    final backup = pairs.toList();
+    final forwardBackup = Map.of(_forward);
+    final reverseBackup = Map.of(_reverse);
+    final lengthBackup = _length;
     _forward.clear();
     _reverse.clear();
     _length = 0;
 
     record(() {
-      for (final (key, value) in backup) {
-        _addRaw(key, value);
-      }
+      _forward.addAll(forwardBackup);
+      _reverse.addAll(reverseBackup);
+      _length = lengthBackup;
     });
   }
 
