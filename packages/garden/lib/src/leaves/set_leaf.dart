@@ -4,7 +4,7 @@ import 'package:garden/src/garden.dart';
 
 /// A [Leaf] set implementation with branch-aware undo recording.
 class SetLeaf<T> with SetMixin<T>, Leaf {
-  SetLeaf([Iterable<T>? data]) : _delegate = data?.toSet() ?? <T>{};
+  SetLeaf([Iterable<T>? data]) : _delegate = data?.toSet() ?? {};
 
   Set<T> _delegate;
 
@@ -74,9 +74,7 @@ class SetLeaf<T> with SetMixin<T>, Leaf {
   }
 
   @override
-  void retainWhere(bool Function(T) test) {
-    removeWhere((element) => !test(element));
-  }
+  void retainWhere(bool Function(T) test) => removeWhere((element) => !test(element));
 
   @override
   void retainAll(Iterable<Object?> elements) {

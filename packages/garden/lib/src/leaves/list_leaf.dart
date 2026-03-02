@@ -1,54 +1,73 @@
+import 'dart:collection';
 import 'dart:math';
 
-import 'package:collection/collection.dart';
 import 'package:garden/src/garden.dart';
 
 /// A [Leaf] list implementation with branch-aware undo recording.
-class ListLeaf<T> extends DelegatingList<T> with Leaf {
-  ListLeaf([Iterable<T>? data]) : super(data?.toList() ?? <T>[]);
+class ListLeaf<T> with ListMixin<T>, Leaf {
+  ListLeaf([Iterable<T>? data]) : _delegate = data?.toList() ?? [];
+
+  List<T> _delegate;
+
+  @override
+  T operator [](int index) => _delegate[index];
 
   @override
   void operator []=(int index, T value) {
-    final backup = super[index];
-    record(() => super[index] = backup);
-    super[index] = value;
+    final backup = _delegate[index];
+    record(() => _delegate[index] = backup);
+    _delegate[index] = value;
+  }
+
+  @override
+  int get length => _delegate.length;
+
+  @override
+  set length(int newLength) {
+    if (newLength < length) {
+      final backup = _delegate.sublist(newLength);
+      _delegate.length = newLength;
+      record(() => _delegate.addAll(backup));
+    } else {
+      _delegate.length = newLength;
+    }
   }
 
   @override
   void add(T value) {
-    super.add(value);
-    record(super.removeLast);
+    _delegate.add(value);
+    record(_delegate.removeLast);
   }
 
   @override
   void addAll(Iterable<T> iterable) {
     final start = length;
-    super.addAll(iterable);
+    _delegate.addAll(iterable);
     final end = length;
     if (start == end) return;
-    record(() => super.removeRange(start, end));
+    record(() => _delegate.removeRange(start, end));
   }
 
   @override
   void insert(int index, T element) {
-    super.insert(index, element);
-    record(() => super.removeAt(index));
+    _delegate.insert(index, element);
+    record(() => _delegate.removeAt(index));
   }
 
   @override
   void insertAll(int index, Iterable<T> iterable) {
     final before = length;
-    super.insertAll(index, iterable);
+    _delegate.insertAll(index, iterable);
     final after = length;
     if (before == after) return;
     final count = after - before;
-    record(() => super.removeRange(index, index + count));
+    record(() => _delegate.removeRange(index, index + count));
   }
 
   @override
   bool remove(Object? value) {
     if (value is! T) return false;
-    final index = super.indexOf(value);
+    final index = _delegate.indexOf(value);
     if (index == -1) return false;
     removeAt(index);
     return true;
@@ -56,30 +75,30 @@ class ListLeaf<T> extends DelegatingList<T> with Leaf {
 
   @override
   T removeAt(int index) {
-    final backup = super.removeAt(index);
-    record(() => super.insert(index, backup));
+    final backup = _delegate.removeAt(index);
+    record(() => _delegate.insert(index, backup));
     return backup;
   }
 
   @override
   void removeWhere(bool Function(T) test) {
     if (isEmpty) return;
-    final backup = toList();
+    final backup = _delegate.toList();
     final originalLength = length;
     var write = 0;
 
     for (var read = 0; read < originalLength; read += 1) {
-      if (test(super[read])) continue;
-      if (write != read) super[write] = super[read];
+      if (test(_delegate[read])) continue;
+      if (write != read) _delegate[write] = _delegate[read];
       write += 1;
     }
 
     if (write == originalLength) return;
-    super.removeRange(write, originalLength);
+    _delegate.removeRange(write, originalLength);
 
     record(() {
-      super.clear();
-      super.addAll(backup);
+      _delegate.clear();
+      _delegate.addAll(backup);
     });
   }
 
@@ -90,51 +109,51 @@ class ListLeaf<T> extends DelegatingList<T> with Leaf {
 
   @override
   void sort([int Function(T a, T b)? compare]) {
-    final backup = toList();
-    super.sort(compare);
-    record(() => super.setAll(0, backup));
+    final backup = _delegate.toList();
+    _delegate.sort(compare);
+    record(() => _delegate.setAll(0, backup));
   }
 
   @override
   void setAll(int index, Iterable<T> iterable) {
     final items = iterable.toList();
-    final backup = sublist(index, index + items.length);
-    super.setAll(index, items);
-    record(() => super.setAll(index, backup));
+    final backup = _delegate.sublist(index, index + items.length);
+    _delegate.setAll(index, items);
+    record(() => _delegate.setAll(index, backup));
   }
 
   @override
   void setRange(int start, int end, Iterable<T> iterable, [int skipCount = 0]) {
-    final backup = sublist(start, end);
-    super.setRange(start, end, iterable, skipCount);
-    record(() => super.setRange(start, end, backup));
+    final backup = _delegate.sublist(start, end);
+    _delegate.setRange(start, end, iterable, skipCount);
+    record(() => _delegate.setRange(start, end, backup));
   }
 
   @override
   void fillRange(int start, int end, [T? fillValue]) {
-    final backup = sublist(start, end);
-    super.fillRange(start, end, fillValue);
-    record(() => super.setRange(start, end, backup));
+    final backup = _delegate.sublist(start, end);
+    _delegate.fillRange(start, end, fillValue);
+    record(() => _delegate.setRange(start, end, backup));
   }
 
   @override
   void replaceRange(int start, int end, Iterable<T> replacements) {
-    final backup = sublist(start, end);
+    final backup = _delegate.sublist(start, end);
     final before = length;
-    super.replaceRange(start, end, replacements);
+    _delegate.replaceRange(start, end, replacements);
     final newEnd = end + length - before;
 
     record(() {
-      super.removeRange(start, newEnd);
-      super.insertAll(start, backup);
+      _delegate.removeRange(start, newEnd);
+      _delegate.insertAll(start, backup);
     });
   }
 
   @override
   void shuffle([Random? random]) {
-    final backup = toList();
-    super.shuffle(random);
-    record(() => super.setAll(0, backup));
+    final backup = _delegate.toList();
+    _delegate.shuffle(random);
+    record(() => _delegate.setAll(0, backup));
   }
 
   /// Like [removeWhere], but without copying the entire list for undo.
@@ -144,44 +163,33 @@ class ListLeaf<T> extends DelegatingList<T> with Leaf {
   /// [removeWhere] is faster due to its single-pass compaction.
   void removeWhereSparse(bool Function(T) test) {
     for (var i = length - 1; i >= 0; i -= 1) {
-      if (test(super[i])) {
-        final value = super.removeAt(i);
-        record(() => super.insert(i, value));
+      if (test(_delegate[i])) {
+        final value = _delegate.removeAt(i);
+        record(() => _delegate.insert(i, value));
       }
     }
   }
 
   @override
   T removeLast() {
-    final backup = super.removeLast();
-    record(() => super.add(backup));
+    final backup = _delegate.removeLast();
+    record(() => _delegate.add(backup));
     return backup;
   }
 
   @override
   void removeRange(int start, int end) {
     if (start == end) return;
-    final backup = sublist(start, end);
-    super.removeRange(start, end);
-    record(() => super.insertAll(start, backup));
-  }
-
-  @override
-  set length(int newLength) {
-    if (newLength < length) {
-      final backup = sublist(newLength);
-      super.length = newLength;
-      record(() => super.addAll(backup));
-    } else {
-      super.length = newLength;
-    }
+    final backup = _delegate.sublist(start, end);
+    _delegate.removeRange(start, end);
+    record(() => _delegate.insertAll(start, backup));
   }
 
   @override
   void clear() {
-    if (isEmpty) return;
-    final backup = toList();
-    record(() => super.addAll(backup));
-    super.clear();
+    if (_delegate.isEmpty) return;
+    final backup = _delegate;
+    _delegate = [];
+    record(() => _delegate = backup);
   }
 }
