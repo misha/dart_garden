@@ -4,141 +4,141 @@
   "records": [
     {
       "name": "value set",
-      "time": 5.527
+      "time": 5.208
     },
     {
       "name": "list set",
-      "time": 3.856
+      "time": 3.702
     },
     {
       "name": "list add",
-      "time": 3.201
+      "time": 3.183
     },
     {
       "name": "list addAll",
-      "time": 8.2
+      "time": 8.339
     },
     {
       "name": "list insert",
-      "time": 24.729
+      "time": 24.233
     },
     {
       "name": "list insertAll",
-      "time": 24.792
+      "time": 23.46
     },
     {
       "name": "list remove",
-      "time": 26.446
+      "time": 26.504
     },
     {
       "name": "list removeAt",
-      "time": 21.892
+      "time": 21.802
     },
     {
       "name": "list removeRange",
-      "time": 20.084
+      "time": 20.305
     },
     {
       "name": "list removeWhere",
-      "time": 60.722
+      "time": 58.689
     },
     {
       "name": "list removeWhereSparse",
-      "time": 59.344
+      "time": 57.868
     },
     {
       "name": "list removeLast",
-      "time": 3.244
+      "time": 3.401
     },
     {
       "name": "list clear",
-      "time": 18.491
+      "time": 16.768
     },
     {
       "name": "set add",
-      "time": 9.379
+      "time": 9.905
     },
     {
       "name": "set addAll",
-      "time": 38.375
+      "time": 38.357
     },
     {
       "name": "set remove",
-      "time": 4.623
+      "time": 4.719
     },
     {
       "name": "set removeAll",
-      "time": 18.365
+      "time": 18.446
     },
     {
       "name": "set removeWhere",
-      "time": 134.697
+      "time": 131.793
     },
     {
       "name": "set clear",
-      "time": 160.953
+      "time": 159.776
     },
     {
       "name": "map set",
-      "time": 7.97
+      "time": 8.423
     },
     {
       "name": "map addEntries",
-      "time": 35.192
+      "time": 34.166
     },
     {
       "name": "map remove",
-      "time": 8.239
+      "time": 8.421
     },
     {
       "name": "map removeWhere",
-      "time": 214.0
+      "time": 211.782
     },
     {
       "name": "map update",
-      "time": 6.441
+      "time": 6.313
     },
     {
       "name": "map updateAll",
-      "time": 271.56
+      "time": 270.401
     },
     {
       "name": "map clear",
-      "time": 284.06
+      "time": 279.31
     },
     {
       "name": "rng nextInt",
-      "time": 11.816
+      "time": 11.486
     },
     {
       "name": "relation add",
-      "time": 23.99
+      "time": 24.428
     },
     {
       "name": "relation remove",
-      "time": 9.944
+      "time": 9.753
     },
     {
       "name": "relation removeKey",
-      "time": 77.402
+      "time": 75.652
     },
     {
       "name": "relation removeValue",
-      "time": 76.29
+      "time": 71.983
     },
     {
       "name": "relation move",
-      "time": 18.163
+      "time": 17.375
     },
     {
       "name": "relation clear",
-      "time": 859.85
+      "time": 865.526
     },
     {
       "name": "relation length",
-      "time": 4.767
+      "time": 0.686
     }
   ],
-  "timestamp": "2026-03-02T10:12:49.932939",
-  "total": 2556.604
+  "timestamp": "2026-03-02T10:22:51.655222",
+  "total": 2532.1630000000005
 }

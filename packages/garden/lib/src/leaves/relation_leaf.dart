@@ -23,10 +23,16 @@ sealed class RelationLeaf<K, V> with Leaf {
   final bool _uniqueValues;
   final Map<K, Set<V>> _forward = {};
   final Map<V, Set<K>> _reverse = {};
+  int _length = 0;
 
   bool _addRaw(K key, V value) {
     final added = (_forward[key] ??= {}).add(value);
-    if (added) (_reverse[value] ??= {}).add(key);
+
+    if (added) {
+      (_reverse[value] ??= {}).add(key);
+      _length += 1;
+    }
+
     return added;
   }
 
@@ -37,6 +43,7 @@ sealed class RelationLeaf<K, V> with Leaf {
     final rSet = _reverse[value]!;
     rSet.remove(key);
     if (rSet.isEmpty) _reverse.remove(value);
+    _length -= 1;
     return true;
   }
 
@@ -173,6 +180,7 @@ sealed class RelationLeaf<K, V> with Leaf {
     final backup = pairs.toList();
     _forward.clear();
     _reverse.clear();
+    _length = 0;
 
     record(() {
       for (final (key, value) in backup) {
@@ -201,15 +209,13 @@ sealed class RelationLeaf<K, V> with Leaf {
   Iterable<V> get values => _reverse.keys;
 
   /// The total number of pairs in the relation.
-  int get length {
-    var count = 0;
+  int get length => _length;
 
-    for (final values in _forward.values) {
-      count += values.length;
-    }
+  /// The number of distinct keys in the relation.
+  int get keyCount => _forward.length;
 
-    return count;
-  }
+  /// The number of distinct values in the relation.
+  int get valueCount => _reverse.length;
 
   bool get isEmpty => _forward.isEmpty;
   bool get isNotEmpty => _forward.isNotEmpty;
