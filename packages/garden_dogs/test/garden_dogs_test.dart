@@ -46,6 +46,21 @@ void main() {
     expect(restored['b'], equals(2));
   });
 
+  test('RelationLeafNN', () {
+    final leaf = garden.grow(
+      () => RelationLeafNN([('a', 1), ('b', 2), ('a', 3)]),
+    );
+    const tree = TypeTree2<RelationLeafNN, String, int>();
+    final native = dogs.toNative(leaf, tree: tree);
+    final restored = garden.grow(
+      () => dogs.fromNative<RelationLeafNN<String, int>>(native, tree: tree),
+    );
+    expect(restored.containsPair('a', 1), isTrue);
+    expect(restored.containsPair('b', 2), isTrue);
+    expect(restored.containsPair('a', 3), isTrue);
+    expect(restored.length, equals(3));
+  });
+
   test('RngLeaf', () {
     final leaf = garden.grow(() => RngLeaf(42));
     leaf.nextInt();

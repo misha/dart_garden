@@ -24,12 +24,14 @@ rps perftest map update updateAll
 
 The available leaves and their operations are as follows:
 
-| Leaf    | Operations                                                             |
-|---------|------------------------------------------------------------------------|
-| `value` | `set`                                                                  |
-| `list`  | `set`, `add`, `addAll`, `insert`, `insertAll`, `remove`, `removeAt`, `removeRange`, `removeWhere`, `removeWhereSparse`, `removeLast`, `clear` |
-| `set`   | `add`, `addAll`, `remove`, `removeAll`, `removeWhere`, `clear`                      |
-| `map`   | `set`, `addEntries`, `remove`, `removeWhere`, `update`, `updateAll`, `clear` |
+| Leaf       | Operations                                                                                                                                    |
+|------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
+| `value`    | `set`                                                                                                                                         |
+| `list`     | `set`, `add`, `addAll`, `insert`, `insertAll`, `remove`, `removeAt`, `removeRange`, `removeWhere`, `removeWhereSparse`, `removeLast`, `clear` |
+| `set`      | `add`, `addAll`, `remove`, `removeAll`, `removeWhere`, `clear`                                                                                |
+| `map`      | `set`, `addEntries`, `remove`, `removeWhere`, `update`, `updateAll`, `clear`                                                                  |
+| `rng`      | `nextInt`                                                                                                                                     |
+| `relation` | `add`, `remove`, `removeKey`, `removeValue`, `move`, `clear`, `length`                                                                        |
 
 ## Options
 

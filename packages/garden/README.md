@@ -35,13 +35,14 @@ print(turn.value);      // 0
 
 Currently, the following leaves are available:
 
-| Leaf        | Usage                                                                               |
-|-------------|-------------------------------------------------------------------------------------|
-| `ValueLeaf` | Boxes a primitive value.                                                            |
-| `ListLeaf`  | Drop-in `List` replacement.                                                         |
-| `SetLeaf`   | Drop-in `Set` replacement.                                                          |
-| `MapLeaf`   | Drop-in `Map` replacement.                                                          |
-| `RngLeaf`   | Drop-in `Random` replacement, powered by [`chaos`](https://pub.dev/packages/chaos). |
+| Leaf           | Usage                                                                                                                                                                                         |
+|----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `ValueLeaf`    | Boxes a primitive value.                                                                                                                                                                      |
+| `ListLeaf`     | Drop-in `List` replacement.                                                                                                                                                                   |
+| `SetLeaf`      | Drop-in `Set` replacement.                                                                                                                                                                    |
+| `MapLeaf`      | Drop-in `Map` replacement.                                                                                                                                                                    |
+| `RngLeaf`      | Drop-in `Random` replacement, powered by [`chaos`](https://pub.dev/packages/chaos).                                                                                                           |
+| `RelationLeaf` | Bidirectional key-value pairs with forward and reverse indexes. Supports 1-1, 1-N, N-1, and N-N cardinalities via `RelationLeaf11`, `RelationLeaf1N`, `RelationLeafN1`, and `RelationLeafNN`. |
 
 ## Serialization
 

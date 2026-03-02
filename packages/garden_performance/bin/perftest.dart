@@ -16,6 +16,7 @@ const _operations = {
   'set': ['add', 'addAll', 'remove', 'removeAll', 'removeWhere', 'clear'],
   'map': ['set', 'addEntries', 'remove', 'removeWhere', 'update', 'updateAll', 'clear'],
   'rng': ['nextInt'],
+  'relation': ['add', 'remove', 'removeKey', 'removeValue', 'move', 'clear', 'length'],
 };
 // dart format on
 
@@ -210,6 +211,16 @@ List<int> _generate(
   return .generate(count, (_) => rng.nextInt(max));
 }
 
+List<String> _generateStrings(
+  int count,
+  Random rng, {
+  int max = 1 << 32,
+}) {
+  return _generate(count, rng, max: max) //
+      .map((element) => element.toString())
+      .toList();
+}
+
 void Function(int i) _build(String type, String operation, int runs, Random rng) {
   switch (type) {
     case 'value':
@@ -368,6 +379,47 @@ void Function(int i) _build(String type, String operation, int runs, Random rng)
               leaf.nextInt();
             }
           };
+
+        default:
+          throw ArgumentError.value(operation, 'operation');
+      }
+
+    case 'relation':
+      final leaf = RelationLeafNN<int, String>([
+        for (var key = 0; key < 10; key += 1) //
+          for (var value = 0; value < 10; value += 1) //
+            (key, value.toString()),
+      ]);
+
+      switch (operation) {
+        case 'add':
+          final keys = _generate(runs, rng, max: 10);
+          final values = _generateStrings(runs, rng).toList();
+          return (i) => leaf.add(keys[i], values[i]);
+
+        case 'remove':
+          final keys = _generate(runs, rng, max: 10);
+          final values = _generateStrings(runs, rng, max: 10).toList();
+          return (i) => leaf.remove(keys[i], values[i]);
+
+        case 'removeKey':
+          final keys = _generate(runs, rng, max: 10);
+          return (i) => leaf.removeKey(keys[i]);
+
+        case 'removeValue':
+          final values = _generateStrings(runs, rng, max: 10).toList();
+          return (i) => leaf.removeValue(values[i]);
+
+        case 'move':
+          final keys = _generate(runs, rng, max: 10);
+          final values = _generateStrings(runs, rng).toList();
+          return (i) => leaf.move(keys[i], values[i]);
+
+        case 'clear':
+          return (_) => leaf.clear();
+
+        case 'length':
+          return (_) => leaf.length;
 
         default:
           throw ArgumentError.value(operation, 'operation');
