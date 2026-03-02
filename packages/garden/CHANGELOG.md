@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.1.1
+
+- Optimize `clear` performance for `ListLeaf`, `SetLeaf`, `MapLeaf`, and `RelationLeaf`.
+
 ## 2.1.0
 
 - Implements a `RelationLeaf` with supports for 1-1, 1-N, N-1, and N-1 relationships.

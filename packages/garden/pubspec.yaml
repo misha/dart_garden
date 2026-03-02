@@ -1,6 +1,6 @@
 name: garden
 description: Transactional data structures.
-version: 2.1.0
+version: 2.1.1
 repository: https://github.com/misha/dart_garden
 resolution: workspace
 environment:
