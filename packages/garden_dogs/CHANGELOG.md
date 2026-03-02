@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.1.0
+
+- Adds `RelationLeaf` support.
+
 ## 2.0.0
 
 - Adds `RngLeaf` support.

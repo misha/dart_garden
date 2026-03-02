@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.1.0
+
+- Implements a `RelationLeaf` with supports for 1-1, 1-N, N-1, and N-1 relationships.
+
 ## 2.0.0
 
 - Implements an `RngLeaf` using the `chaos` package.

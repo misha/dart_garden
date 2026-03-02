@@ -1,6 +1,6 @@
 name: garden_dogs
 description: dogs support for garden.
-version: 2.0.0
+version: 2.1.0
 repository: https://github.com/misha/dart_garden
 resolution: workspace
 environment:
