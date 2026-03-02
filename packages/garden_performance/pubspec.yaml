@@ -19,3 +19,8 @@ scripts:
   analyze: dart analyze
   build: dart run build_runner build --delete-conflicting-outputs
   perftest: dart run bin/perftest.dart
+  benchmark: |
+    for i in $(seq 1 10); do
+      echo "=== Run $i ===";
+      dart run bin/perftest.dart --save-if-better; 
+    done
