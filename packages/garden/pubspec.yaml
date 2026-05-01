@@ -9,7 +9,7 @@ dependencies:
   binary: ^4.0.0
   chaos: ^0.1.2+4
   collection: ^1.19.1
-  meta: ^1.18.1
+  meta: ^1.17.0
 dev_dependencies:
   lints: ^6.1.0
   test: ^1.30.0
