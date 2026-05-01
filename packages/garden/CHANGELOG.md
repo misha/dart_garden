@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.1.2
+
+- Reduced the `meta` dependency version requirement to `^1.17.0`.
+
 ## 2.1.1
 
 - Optimize `clear` performance for `ListLeaf`, `SetLeaf`, `MapLeaf`, and `RelationLeaf`.
