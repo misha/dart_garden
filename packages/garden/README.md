@@ -48,6 +48,8 @@ Currently, the following leaves are available:
 
 The undo functionality stores function pointers. In other words, **this library cannot serialize its undo stack**. This makes `garden` a great choice for in-memory simulations, but a poor one for use cases that require saving state mid-transaction (e.g. for subsequent continuation).
 
+Check the example project at the repository root for a clear precedent on how to manually convert to and from an object managed by a garden.
+
 ## Motivation
 
 I'm an indie game developer building games in Dart and Flutter.
