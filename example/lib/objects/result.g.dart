@@ -12,7 +12,7 @@ WinResult _$WinResultFromJson(Map<String, dynamic> json) => WinResult(
 );
 
 Map<String, dynamic> _$WinResultToJson(WinResult instance) => <String, dynamic>{
-  'winner': instance.winner,
+  'winner': instance.winner.toJson(),
   'runtimeType': instance.$type,
 };
 

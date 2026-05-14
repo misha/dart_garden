@@ -36,12 +36,12 @@ Map<String, dynamic> _$GameDataToJson(_GameData instance) => <String, dynamic>{
   'serial': instance.serial,
   'turn': instance.turn,
   'contents': instance.contents
-      .map((e) => <String, dynamic>{r'$1': e.$1, r'$2': e.$2})
+      .map((e) => <String, dynamic>{r'$1': e.$1.toJson(), r'$2': e.$2.toJson()})
       .toList(),
   'owners': instance.owners
-      .map((e) => <String, dynamic>{r'$1': e.$1, r'$2': e.$2})
+      .map((e) => <String, dynamic>{r'$1': e.$1.toJson(), r'$2': e.$2.toJson()})
       .toList(),
-  'result': instance.result,
+  'result': instance.result?.toJson(),
 };
 
 $Rec _$recordConvert<$Rec>(Object? value, $Rec Function(Map) convert) =>
