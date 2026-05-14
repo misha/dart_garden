@@ -7,7 +7,7 @@ void main() {
 
   setUp(() {
     garden = Garden();
-    leaf = garden.grow(() => ValueLeaf(1));
+    leaf = garden.grow(ValueLeaf(1));
   });
 
   test('initial value', () {
@@ -30,7 +30,7 @@ void main() {
   test('can branch and revert', () {
     garden.branch();
     leaf.value += 1;
-    garden.revert();
+    garden.rollback();
     expect(leaf.value, equals(1));
     expect(garden.isBranched, isFalse);
   });

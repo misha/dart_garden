@@ -7,13 +7,13 @@ void main() {
 
   setUp(() {
     garden = Garden();
-    leaf = garden.grow(() => SetLeaf({1, 2, 3}));
+    leaf = garden.grow(SetLeaf({1, 2, 3}));
   });
 
   test('commit and revert add()', () {
     garden.branch();
     leaf.add(4);
-    garden.revert();
+    garden.rollback();
     expect(leaf, equals({1, 2, 3}));
 
     garden.branch();
@@ -25,7 +25,7 @@ void main() {
   test('commit and revert remove()', () {
     garden.branch();
     expect(leaf.remove(2), isTrue);
-    garden.revert();
+    garden.rollback();
     expect(leaf, equals({1, 2, 3}));
 
     garden.branch();
@@ -38,14 +38,14 @@ void main() {
     garden.branch();
     leaf.addAll([2, 3, 4, 5]);
     expect(leaf, equals({1, 2, 3, 4, 5}));
-    garden.revert();
+    garden.rollback();
     expect(leaf, equals({1, 2, 3}));
   });
 
   test('commit and revert removeAll()', () {
     garden.branch();
     leaf.removeAll([2, 3, 99]);
-    garden.revert();
+    garden.rollback();
     expect(leaf, equals({1, 2, 3}));
 
     garden.branch();
@@ -57,14 +57,14 @@ void main() {
   test('removeAll with no matches is a no-op', () {
     garden.branch();
     leaf.removeAll([99, 100]);
-    garden.revert();
+    garden.rollback();
     expect(leaf, equals({1, 2, 3}));
   });
 
   test('commit and revert removeWhere()', () {
     garden.branch();
     leaf.removeWhere((value) => value.isEven);
-    garden.revert();
+    garden.rollback();
     expect(leaf, equals({1, 2, 3}));
 
     garden.branch();
@@ -74,11 +74,11 @@ void main() {
   });
 
   test('revert removeWhere() with multiple removals', () {
-    final big = garden.grow(() => SetLeaf({0, 1, 2, 3, 4, 5}));
+    final big = garden.grow(SetLeaf({0, 1, 2, 3, 4, 5}));
     garden.branch();
     big.removeWhere((value) => value.isEven);
     expect(big, equals({1, 3, 5}));
-    garden.revert();
+    garden.rollback();
     expect(big, equals({0, 1, 2, 3, 4, 5}));
   });
 
@@ -86,7 +86,7 @@ void main() {
     garden.branch();
     leaf.retainWhere((value) => value.isOdd);
     expect(leaf, equals({1, 3}));
-    garden.revert();
+    garden.rollback();
     expect(leaf, equals({1, 2, 3}));
   });
 
@@ -94,14 +94,14 @@ void main() {
     garden.branch();
     leaf.retainAll([1, 3, 99]);
     expect(leaf, equals({1, 3}));
-    garden.revert();
+    garden.rollback();
     expect(leaf, equals({1, 2, 3}));
   });
 
   test('commit and revert clear()', () {
     garden.branch();
     leaf.clear();
-    garden.revert();
+    garden.rollback();
     expect(leaf, equals({1, 2, 3}));
 
     garden.branch();

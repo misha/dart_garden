@@ -7,18 +7,18 @@ void main() {
 
   setUp(() {
     garden = Garden();
-    leaf = garden.grow(() => RngLeaf(42));
+    leaf = garden.grow(RngLeaf(42));
   });
 
   test('seeded leaf produces deterministic values', () {
-    final other = garden.grow(() => RngLeaf(42));
+    final other = garden.grow(RngLeaf(42));
     expect(leaf.nextInt(), equals(other.nextInt()));
     expect(leaf.nextDouble(), equals(other.nextDouble()));
     expect(leaf.nextBool(), equals(other.nextBool()));
   });
 
   test('different seeds produce different values', () {
-    final other = garden.grow(() => RngLeaf(99));
+    final other = garden.grow(RngLeaf(99));
     expect(leaf.nextInt(), isNot(equals(other.nextInt())));
   });
 
@@ -35,7 +35,7 @@ void main() {
     garden.branch();
     final a = leaf.nextInt();
     final b = leaf.nextInt();
-    garden.revert();
+    garden.rollback();
 
     // After revert the generator replays the same sequence.
     expect(leaf.nextInt(), equals(a));
@@ -48,7 +48,7 @@ void main() {
     leaf.nextInt();
     leaf.nextInt();
     final state = leaf.save();
-    garden.revert();
+    garden.rollback();
 
     // State was captured at branch entry, not at each call.
     expect(leaf.save(), isNot(equals(state)));
@@ -57,7 +57,7 @@ void main() {
   test('save returns restorable state', () {
     leaf.nextInt();
     final state = leaf.save();
-    final restored = garden.grow(() => RngLeaf.restore(state));
+    final restored = garden.grow(RngLeaf.restore(state));
     expect(restored.nextInt(), equals(leaf.nextInt()));
   });
 
@@ -67,12 +67,12 @@ void main() {
 
     garden.branch();
     leaf.nextInt();
-    garden.revert(); // inner revert
+    garden.rollback(); // inner revert
 
     // Should replay from inner branch point, not outer.
     expect(leaf.nextInt(), isNot(equals(a)));
 
-    garden.revert(); // outer revert
+    garden.rollback(); // outer revert
     expect(leaf.nextInt(), equals(a));
   });
 }

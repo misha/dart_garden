@@ -1,6 +1,7 @@
-name: garden_performance
+name: perftest
 description: Performance benchmarks for garden.
 publish_to: none
+version: 1.0.0
 repository: https://github.com/misha/dart_garden
 resolution: workspace
 environment:

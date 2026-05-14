@@ -221,10 +221,11 @@ List<String> _generateStrings(
       .toList();
 }
 
-void Function(int i) _build(String type, String operation, int runs, Random rng) {
+void Function(int i) _build(Garden garden, String type, String operation, int runs, Random rng) {
   switch (type) {
     case 'value':
       final leaf = ValueLeaf(0);
+      garden.grow(leaf);
 
       switch (operation) {
         case 'set':
@@ -237,6 +238,7 @@ void Function(int i) _build(String type, String operation, int runs, Random rng)
 
     case 'list':
       final leaf = ListLeaf(.generate(100, (i) => i).shuffled(rng));
+      garden.grow(leaf);
 
       switch (operation) {
         case 'set':
@@ -295,6 +297,7 @@ void Function(int i) _build(String type, String operation, int runs, Random rng)
 
     case 'set':
       final leaf = SetLeaf(.generate(100, (i) => i).shuffled(rng));
+      garden.grow(leaf);
 
       switch (operation) {
         case 'add':
@@ -330,6 +333,8 @@ void Function(int i) _build(String type, String operation, int runs, Random rng)
           i: i,
       });
 
+      garden.grow(leaf);
+
       switch (operation) {
         case 'set':
           final keys = _generate(runs, rng, max: 100);
@@ -342,6 +347,7 @@ void Function(int i) _build(String type, String operation, int runs, Random rng)
             final values = _generate(5, rng);
             return [for (var j = 0; j < 5; j++) MapEntry(keys[j], values[j])];
           });
+
           return (i) => leaf.addEntries(batches[i]);
 
         case 'remove':
@@ -370,10 +376,12 @@ void Function(int i) _build(String type, String operation, int runs, Random rng)
 
     case 'rng':
       final leaf = RngLeaf(rng.nextInt(1 << 32));
+      garden.grow(leaf);
 
       switch (operation) {
         case 'nextInt':
           final counts = _generate(runs, rng, max: 10);
+
           return (i) {
             for (var j = 0; j <= counts[i]; j++) {
               leaf.nextInt();
@@ -390,6 +398,8 @@ void Function(int i) _build(String type, String operation, int runs, Random rng)
           for (var value = 0; value < 10; value += 1) //
             (key, value.toString()),
       ]);
+
+      garden.grow(leaf);
 
       switch (operation) {
         case 'add':
@@ -432,13 +442,13 @@ void Function(int i) _build(String type, String operation, int runs, Random rng)
 
 Duration _test(String leaf, String operation, int runs, Random rng) {
   final garden = Garden();
-  final test = garden.grow(() => _build(leaf, operation, runs, rng));
+  final test = _build(garden, leaf, operation, runs, rng);
   final runtime = Stopwatch()..start();
 
   for (var i = 0; i < runs; i += 1) {
     garden.branch();
     test(i);
-    garden.revert();
+    garden.rollback();
   }
 
   runtime.stop();

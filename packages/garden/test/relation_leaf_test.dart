@@ -8,7 +8,7 @@ void main() {
 
     setUp(() {
       garden = Garden();
-      leaf = garden.grow(() => RelationLeafNN([('a', 1), ('a', 2), ('b', 2)]));
+      leaf = garden.grow(RelationLeafNN([('a', 1), ('a', 2), ('b', 2)]));
     });
 
     test('initial state', () {
@@ -25,7 +25,7 @@ void main() {
       garden.branch();
       leaf.add('c', 3);
       expect(leaf.containsPair('c', 3), isTrue);
-      garden.revert();
+      garden.rollback();
       expect(leaf.containsPair('c', 3), isFalse);
       expect(leaf.length, equals(3));
     });
@@ -41,7 +41,7 @@ void main() {
     test('add duplicate is a no-op', () {
       garden.branch();
       leaf.add('a', 1);
-      garden.revert();
+      garden.rollback();
       expect(leaf.containsPair('a', 1), isTrue);
       expect(leaf.length, equals(3));
     });
@@ -50,14 +50,14 @@ void main() {
       garden.branch();
       expect(leaf.remove('a', 1), isTrue);
       expect(leaf.containsPair('a', 1), isFalse);
-      garden.revert();
+      garden.rollback();
       expect(leaf.containsPair('a', 1), isTrue);
     });
 
     test('remove non-existent pair', () {
       garden.branch();
       expect(leaf.remove('z', 99), isFalse);
-      garden.revert();
+      garden.rollback();
       expect(leaf.length, equals(3));
     });
 
@@ -68,7 +68,7 @@ void main() {
       expect(leaf.containsKey('a'), isFalse);
       expect(leaf.getKeys(1), isEmpty);
       expect(leaf.getKeys(2), equals({'b'}));
-      garden.revert();
+      garden.rollback();
       expect(leaf.getValues('a'), equals({1, 2}));
       expect(leaf.getKeys(1), equals({'a'}));
     });
@@ -78,7 +78,7 @@ void main() {
       final removed = leaf.removeValue(2);
       expect(removed, equals({'a', 'b'}));
       expect(leaf.containsValue(2), isFalse);
-      garden.revert();
+      garden.rollback();
       expect(leaf.getKeys(2), equals({'a', 'b'}));
     });
 
@@ -86,7 +86,7 @@ void main() {
       garden.branch();
       leaf.clear();
       expect(leaf.isEmpty, isTrue);
-      garden.revert();
+      garden.rollback();
       expect(leaf.length, equals(3));
     });
 
@@ -98,10 +98,10 @@ void main() {
     });
 
     test('clear on empty is a no-op', () {
-      final empty = garden.grow(() => RelationLeafNN<String, int>());
+      final empty = garden.grow(RelationLeafNN<String, int>());
       garden.branch();
       empty.clear();
-      garden.revert();
+      garden.rollback();
       expect(empty.isEmpty, isTrue);
     });
 
@@ -121,12 +121,12 @@ void main() {
 
       garden.branch();
       leaf.add('d', 4);
-      garden.revert();
+      garden.rollback();
 
       expect(leaf.containsPair('c', 3), isTrue);
       expect(leaf.containsPair('d', 4), isFalse);
 
-      garden.revert();
+      garden.rollback();
       expect(leaf.containsPair('c', 3), isFalse);
       expect(leaf.length, equals(3));
     });
@@ -138,7 +138,7 @@ void main() {
 
     setUp(() {
       garden = Garden();
-      leaf = garden.grow(() => RelationLeaf11([('a', 1), ('b', 2)]));
+      leaf = garden.grow(RelationLeaf11([('a', 1), ('b', 2)]));
     });
 
     test('add throws on duplicate key', () {
@@ -160,7 +160,7 @@ void main() {
       expect(leaf.containsPair('a', 1), isFalse);
       expect(leaf.containsPair('a', 3), isTrue);
       expect(leaf.containsValue(1), isFalse);
-      garden.revert();
+      garden.rollback();
       expect(leaf.containsPair('a', 1), isTrue);
       expect(leaf.containsPair('a', 3), isFalse);
     });
@@ -170,7 +170,7 @@ void main() {
       leaf.move('c', 1);
       expect(leaf.containsPair('a', 1), isFalse);
       expect(leaf.containsPair('c', 1), isTrue);
-      garden.revert();
+      garden.rollback();
       expect(leaf.containsPair('a', 1), isTrue);
       expect(leaf.containsPair('c', 1), isFalse);
     });
@@ -180,7 +180,7 @@ void main() {
       leaf.move('a', 2);
       expect(leaf.length, equals(1));
       expect(leaf.containsPair('a', 2), isTrue);
-      garden.revert();
+      garden.rollback();
       expect(leaf.length, equals(2));
       expect(leaf.containsPair('a', 1), isTrue);
       expect(leaf.containsPair('b', 2), isTrue);
@@ -200,7 +200,7 @@ void main() {
 
     setUp(() {
       garden = Garden();
-      leaf = garden.grow(() => RelationLeaf1N([('a', 1), ('a', 2), ('b', 3)]));
+      leaf = garden.grow(RelationLeaf1N([('a', 1), ('a', 2), ('b', 3)]));
     });
 
     test('allows multiple values per key', () {
@@ -222,7 +222,7 @@ void main() {
       leaf.move('b', 1);
       expect(leaf.containsPair('a', 1), isFalse);
       expect(leaf.containsPair('b', 1), isTrue);
-      garden.revert();
+      garden.rollback();
       expect(leaf.containsPair('a', 1), isTrue);
       expect(leaf.containsPair('b', 1), isFalse);
     });
@@ -241,7 +241,7 @@ void main() {
 
     setUp(() {
       garden = Garden();
-      leaf = garden.grow(() => RelationLeafN1([('a', 1), ('b', 1), ('c', 2)]));
+      leaf = garden.grow(RelationLeafN1([('a', 1), ('b', 1), ('c', 2)]));
     });
 
     test('allows multiple keys per value', () {
@@ -263,7 +263,7 @@ void main() {
       leaf.move('a', 2);
       expect(leaf.containsPair('a', 1), isFalse);
       expect(leaf.containsPair('a', 2), isTrue);
-      garden.revert();
+      garden.rollback();
       expect(leaf.containsPair('a', 1), isTrue);
       expect(leaf.containsPair('a', 2), isFalse);
     });

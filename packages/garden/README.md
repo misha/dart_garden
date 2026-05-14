@@ -16,7 +16,7 @@ final garden = Garden();
 
 // Grow a connected value, in this case a simple integer.
 // All leaves must be created inside a `garden.grow` call.
-final turn = garden.grow(() => ValueLeaf(0));
+final turn = garden.grow(ValueLeaf(0));
 
 garden.branch();        // Begin tentative execution.
 print(turn.value);      // 0
@@ -47,10 +47,6 @@ Currently, the following leaves are available:
 ## Serialization
 
 The undo functionality stores function pointers. In other words, **this library cannot serialize its undo stack**. This makes `garden` a great choice for in-memory simulations, but a poor one for use cases that require saving state mid-transaction (e.g. for subsequent continuation).
-
-For serialization of the values themselves, unfortunately `json_serializable` does not support generic classes. [`dogs`](https://pub.dev/packages/dogs_core) is a fantastic alternative that *does*. For fast, transparent serialization, use [`garden_dogs`](https://pub.dev/packages/garden_dogs) and import its `GardenPlugin` into your `dogs` instance.
-
-Note that this still does **not** serialize the undo stack.
 
 ## Motivation
 

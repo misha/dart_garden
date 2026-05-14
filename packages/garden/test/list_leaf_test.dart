@@ -7,13 +7,13 @@ void main() {
 
   setUp(() {
     garden = Garden();
-    leaf = garden.grow(() => ListLeaf([1, 2, 3]));
+    leaf = garden.grow(ListLeaf([1, 2, 3]));
   });
 
   test('commit and revert add()', () {
     garden.branch();
     leaf.add(4);
-    garden.revert();
+    garden.rollback();
     expect(leaf, equals([1, 2, 3]));
 
     garden.branch();
@@ -25,7 +25,7 @@ void main() {
   test('commit and revert remove()', () {
     garden.branch();
     expect(leaf.remove(2), isTrue);
-    garden.revert();
+    garden.rollback();
     expect(leaf, equals([1, 2, 3]));
 
     garden.branch();
@@ -37,7 +37,7 @@ void main() {
   test('commit and revert addAll()', () {
     garden.branch();
     leaf.addAll([4, 5]);
-    garden.revert();
+    garden.rollback();
     expect(leaf, equals([1, 2, 3]));
 
     garden.branch();
@@ -49,7 +49,7 @@ void main() {
   test('commit and revert clear()', () {
     garden.branch();
     leaf.clear();
-    garden.revert();
+    garden.rollback();
     expect(leaf, equals([1, 2, 3]));
 
     garden.branch();
@@ -61,7 +61,7 @@ void main() {
   test('commit and revert removeAt()', () {
     garden.branch();
     expect(leaf.removeAt(1), equals(2));
-    garden.revert();
+    garden.rollback();
     expect(leaf, equals([1, 2, 3]));
 
     garden.branch();
@@ -73,7 +73,7 @@ void main() {
   test('commit and revert removeRange()', () {
     garden.branch();
     leaf.removeRange(0, 2);
-    garden.revert();
+    garden.rollback();
     expect(leaf, equals([1, 2, 3]));
 
     garden.branch();
@@ -85,14 +85,14 @@ void main() {
   test('removeRange with empty range is a no-op', () {
     garden.branch();
     leaf.removeRange(1, 1);
-    garden.revert();
+    garden.rollback();
     expect(leaf, equals([1, 2, 3]));
   });
 
   test('commit and revert removeWhere()', () {
     garden.branch();
     leaf.removeWhere((value) => value.isEven);
-    garden.revert();
+    garden.rollback();
     expect(leaf, equals([1, 2, 3]));
 
     garden.branch();
@@ -102,18 +102,18 @@ void main() {
   });
 
   test('revert removeWhere() with multiple removals', () {
-    final big = garden.grow(() => ListLeaf([0, 1, 2, 3, 4, 5]));
+    final big = garden.grow(ListLeaf([0, 1, 2, 3, 4, 5]));
     garden.branch();
     big.removeWhere((value) => value.isEven);
     expect(big, equals([1, 3, 5]));
-    garden.revert();
+    garden.rollback();
     expect(big, equals([0, 1, 2, 3, 4, 5]));
   });
 
   test('commit and revert removeWhereSparse()', () {
     garden.branch();
     leaf.removeWhereSparse((value) => value.isEven);
-    garden.revert();
+    garden.rollback();
     expect(leaf, equals([1, 2, 3]));
 
     garden.branch();
@@ -123,27 +123,27 @@ void main() {
   });
 
   test('revert removeWhereSparse() with multiple removals', () {
-    final big = garden.grow(() => ListLeaf([0, 1, 2, 3, 4, 5]));
+    final big = garden.grow(ListLeaf([0, 1, 2, 3, 4, 5]));
     garden.branch();
     big.removeWhereSparse((value) => value.isEven);
     expect(big, equals([1, 3, 5]));
-    garden.revert();
+    garden.rollback();
     expect(big, equals([0, 1, 2, 3, 4, 5]));
   });
 
-  test('revert insert()',() {
+  test('revert insert()', () {
     garden.branch();
     leaf.insert(1, 99);
     expect(leaf, equals([1, 99, 2, 3]));
-    garden.revert();
+    garden.rollback();
     expect(leaf, equals([1, 2, 3]));
   });
 
-  test('revert insertAll()',() {
+  test('revert insertAll()', () {
     garden.branch();
     leaf.insertAll(1, [88, 99]);
     expect(leaf, equals([1, 88, 99, 2, 3]));
-    garden.revert();
+    garden.rollback();
     expect(leaf, equals([1, 2, 3]));
   });
 
@@ -151,25 +151,25 @@ void main() {
     garden.branch();
     leaf.retainWhere((value) => value.isOdd);
     expect(leaf, equals([1, 3]));
-    garden.revert();
+    garden.rollback();
     expect(leaf, equals([1, 2, 3]));
   });
 
   test('revert sort()', () {
-    final unsorted = garden.grow(() => ListLeaf([3, 1, 2]));
+    final unsorted = garden.grow(ListLeaf([3, 1, 2]));
     garden.branch();
     unsorted.sort();
     expect(unsorted, equals([1, 2, 3]));
-    garden.revert();
+    garden.rollback();
     expect(unsorted, equals([3, 1, 2]));
   });
 
   test('revert shuffle()', () {
-    final big = garden.grow(() => ListLeaf([1, 2, 3, 4, 5, 6, 7, 8]));
+    final big = garden.grow(ListLeaf([1, 2, 3, 4, 5, 6, 7, 8]));
     final original = big.toList();
     garden.branch();
     big.shuffle();
-    garden.revert();
+    garden.rollback();
     expect(big, equals(original));
   });
 
@@ -177,7 +177,7 @@ void main() {
     garden.branch();
     leaf.first = 99;
     expect(leaf, equals([99, 2, 3]));
-    garden.revert();
+    garden.rollback();
     expect(leaf, equals([1, 2, 3]));
   });
 
@@ -185,7 +185,7 @@ void main() {
     garden.branch();
     leaf.last = 99;
     expect(leaf, equals([1, 2, 99]));
-    garden.revert();
+    garden.rollback();
     expect(leaf, equals([1, 2, 3]));
   });
 
@@ -193,7 +193,7 @@ void main() {
     garden.branch();
     leaf.setAll(1, [88, 99]);
     expect(leaf, equals([1, 88, 99]));
-    garden.revert();
+    garden.rollback();
     expect(leaf, equals([1, 2, 3]));
   });
 
@@ -201,7 +201,7 @@ void main() {
     garden.branch();
     leaf.setRange(0, 2, [88, 99]);
     expect(leaf, equals([88, 99, 3]));
-    garden.revert();
+    garden.rollback();
     expect(leaf, equals([1, 2, 3]));
   });
 
@@ -209,7 +209,7 @@ void main() {
     garden.branch();
     leaf.fillRange(0, 2, 0);
     expect(leaf, equals([0, 0, 3]));
-    garden.revert();
+    garden.rollback();
     expect(leaf, equals([1, 2, 3]));
   });
 
@@ -217,7 +217,7 @@ void main() {
     garden.branch();
     leaf.replaceRange(0, 2, [88, 99, 100]);
     expect(leaf, equals([88, 99, 100, 3]));
-    garden.revert();
+    garden.rollback();
     expect(leaf, equals([1, 2, 3]));
   });
 
@@ -225,7 +225,7 @@ void main() {
     garden.branch();
     leaf.length = 2;
     expect(leaf, equals([1, 2]));
-    garden.revert();
+    garden.rollback();
     expect(leaf, equals([1, 2, 3]));
   });
 }

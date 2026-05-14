@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.0.0
+
+- Each leaf must now be grown individually; no magic `Zone`-backed storage.
+- `revert` renamed to `rollback` to match database transaction vocabulary.
+- Remove `dogs` integration and mark the package discontinued.
+
 ## 2.1.2
 
 - Reduced the `meta` dependency version requirement to `^1.17.0`.

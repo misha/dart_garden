@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.0.0
+
+- Moved from /packages/example_tictactoe to just /example.
+- Replaced `dogs` with canonical `freezed` and `json` usage.
+
 ## 1.0.0
 
 - Initial release.
