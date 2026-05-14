@@ -14,7 +14,8 @@ sealed class RelationLeaf<K, V> with Leaf {
        _uniqueValues = uniqueValues {
     if (data != null) {
       for (final (key, value) in data) {
-        add(key, value);
+        _checkCardinality(key, value);
+        _addRaw(key, value);
       }
     }
   }
