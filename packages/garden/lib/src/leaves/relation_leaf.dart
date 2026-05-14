@@ -151,8 +151,7 @@ sealed class RelationLeaf<K, V> with Leaf {
     return true;
   }
 
-  /// Removes all pairs for [key]. Returns the removed values.
-  Set<V> removeKey(K key) {
+  Set<V> _removeKey(K key) {
     final removed = _removeKeyRaw(key);
     if (removed.isEmpty) return removed;
 
@@ -168,8 +167,7 @@ sealed class RelationLeaf<K, V> with Leaf {
     return removed;
   }
 
-  /// Removes all pairs for [value]. Returns the removed keys.
-  Set<K> removeValue(V value) {
+  Set<K> _removeValue(V value) {
     final removed = _removeValueRaw(value);
     if (removed.isEmpty) return removed;
 
@@ -243,6 +241,12 @@ class RelationLeafNN<K, V> extends RelationLeaf<K, V> {
 
   /// Returns the keys associated with [value], or an empty iterable.
   Iterable<K> getKeys(V value) => _reverse[value] ?? const [];
+
+  /// Removes all keys for [value]. Returns the removed keys.
+  Set<K> removeValue(V value) => _removeValue(value);
+
+  /// Removes all values for [key]. Returns the removed values.
+  Set<V> removeKey(K key) => _removeKey(key);
 }
 
 /// A one-to-many [RelationLeaf]. Each value belongs to at most one key.
@@ -252,28 +256,46 @@ class RelationLeaf1N<K, V> extends RelationLeaf<K, V> {
   /// Returns the values associated with [key], or an empty iterable.
   Iterable<V> getValues(K key) => _forward[key] ?? const [];
 
-  /// Returns the single key associated with [value], or null.
-  K? getKey(V value) => _reverse[value]?.first;
+  /// Returns the single key associated with [value], if any.
+  K? getKey(V value) => _reverse[value]?.single;
+
+  /// Removes the key for [value]. Returns the removed key, if any.
+  K? removeValue(V value) => _removeValue(value).singleOrNull;
+
+  /// Removes all values for [key]. Returns the removed values.
+  Set<V> removeKey(K key) => _removeKey(key);
 }
 
 /// A many-to-one [RelationLeaf]. Each key maps to at most one value.
 class RelationLeafN1<K, V> extends RelationLeaf<K, V> {
   RelationLeafN1([super.data]) : super(uniqueKeys: true, uniqueValues: false);
 
-  /// Returns the single value associated with [key], or null.
-  V? getValue(K key) => _forward[key]?.first;
+  /// Returns the value associated with [key], if any.
+  V? getValue(K key) => _forward[key]?.single;
 
   /// Returns the keys associated with [value], or an empty iterable.
   Iterable<K> getKeys(V value) => _reverse[value] ?? const [];
+
+  /// Removes all keys for [value]. Returns the removed keys.
+  Set<K> removeValue(V value) => _removeValue(value);
+
+  /// Removes the value for [key]. Returns the removed value, if any.
+  V? removeKey(K key) => _removeKey(key).singleOrNull;
 }
 
 /// A one-to-one [RelationLeaf]. Both keys and values are unique.
 class RelationLeaf11<K, V> extends RelationLeaf<K, V> {
   RelationLeaf11([super.data]) : super(uniqueKeys: true, uniqueValues: true);
 
-  /// Returns the single value associated with [key], or null.
-  V? getValue(K key) => _forward[key]?.first;
+  /// Returns the value associated with [key], if any.
+  V? getValue(K key) => _forward[key]?.single;
 
-  /// Returns the single key associated with [value], or null.
-  K? getKey(V value) => _reverse[value]?.first;
+  /// Returns the key associated with [value], if any.
+  K? getKey(V value) => _reverse[value]?.single;
+
+  /// Removes the key for [value]. Returns the removed key, if any.
+  K? removeValue(V value) => _removeValue(value).singleOrNull;
+
+  /// Removes the value for [key]. Returns the removed value, if any.
+  V? removeKey(K key) => _removeKey(key).singleOrNull;
 }

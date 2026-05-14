@@ -186,11 +186,17 @@ void main() {
       expect(leaf.containsPair('b', 2), isTrue);
     });
 
-    test('getValue and getKey', () {
+    test('get', () {
       expect(leaf.getValue('a'), equals(1));
       expect(leaf.getKey(1), equals('a'));
       expect(leaf.getValue('z'), isNull);
       expect(leaf.getKey(99), isNull);
+    });
+
+    test('remove', () {
+      expect(leaf.removeKey('a'), equals(1));
+      expect(leaf.containsKey('a'), isFalse);
+      expect(leaf.containsKey('b'), isTrue);
     });
   });
 
@@ -227,11 +233,17 @@ void main() {
       expect(leaf.containsPair('b', 1), isFalse);
     });
 
-    test('getValues and getKey', () {
+    test('get', () {
       expect(leaf.getValues('a'), equals({1, 2}));
       expect(leaf.getKey(1), equals('a'));
       expect(leaf.getKey(3), equals('b'));
       expect(leaf.getKey(99), isNull);
+    });
+
+    test('remove', () {
+      expect(leaf.removeKey('a'), equals({1, 2}));
+      expect(leaf.containsKey('a'), isFalse);
+      expect(leaf.containsKey('b'), isTrue);
     });
   });
 
@@ -268,12 +280,19 @@ void main() {
       expect(leaf.containsPair('a', 2), isFalse);
     });
 
-    test('getValue and getKeys', () {
+    test('get', () {
       expect(leaf.getValue('a'), equals(1));
       expect(leaf.getValue('z'), isNull);
       expect(leaf.getKeys(1), equals({'a', 'b'}));
       expect(leaf.getKeys(2), equals({'c'}));
       expect(leaf.getKeys(99), isEmpty);
+    });
+
+    test('remove', () {
+      expect(leaf.removeKey('a'), equals(1));
+      expect(leaf.containsKey('a'), isFalse);
+      expect(leaf.containsKey('b'), isTrue);
+      expect(leaf.containsKey('c'), isTrue);
     });
   });
 }
