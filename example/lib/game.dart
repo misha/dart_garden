@@ -4,9 +4,10 @@ import 'package:tictactoe/state.dart';
 import 'package:tictactoe/objects/entity.dart';
 import 'package:tictactoe/objects/position.dart';
 import 'package:tictactoe/objects/result.dart';
+import 'package:tictactoe/objects/token.dart';
 
 class Game {
-  static const players = <Player>[.new(.x), .new(.o)];
+  static const players = <Player>[.new(Token.x), .new(Token.o)];
   static const lines = <List<Position>>[
     [.new(0, 0), .new(0, 1), .new(0, 2)],
     [.new(1, 0), .new(1, 1), .new(1, 2)],
