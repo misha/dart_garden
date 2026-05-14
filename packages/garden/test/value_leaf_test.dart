@@ -27,7 +27,7 @@ void main() {
     expect(garden.isBranched, isFalse);
   });
 
-  test('can branch and revert', () {
+  test('can branch and rollback', () {
     garden.branch();
     leaf.value += 1;
     garden.rollback();

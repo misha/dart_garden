@@ -31,18 +31,18 @@ void main() {
     expect(leaf.nextInt(), isNot(equals(a)));
   });
 
-  test('revert restores RNG state', () {
+  test('rollback restores RNG state', () {
     garden.branch();
     final a = leaf.nextInt();
     final b = leaf.nextInt();
     garden.rollback();
 
-    // After revert the generator replays the same sequence.
+    // After rollback the generator replays the same sequence.
     expect(leaf.nextInt(), equals(a));
     expect(leaf.nextInt(), equals(b));
   });
 
-  test('revert across multiple calls in same version records once', () {
+  test('rollback across multiple calls in same version records once', () {
     garden.branch();
     leaf.nextInt();
     leaf.nextInt();
@@ -61,18 +61,18 @@ void main() {
     expect(restored.nextInt(), equals(leaf.nextInt()));
   });
 
-  test('nested branches revert independently', () {
+  test('nested branches rollback independently', () {
     garden.branch();
     final a = leaf.nextInt();
 
     garden.branch();
     leaf.nextInt();
-    garden.rollback(); // inner revert
+    garden.rollback(); // inner rollback
 
     // Should replay from inner branch point, not outer.
     expect(leaf.nextInt(), isNot(equals(a)));
 
-    garden.rollback(); // outer revert
+    garden.rollback(); // outer rollback
     expect(leaf.nextInt(), equals(a));
   });
 }

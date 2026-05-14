@@ -6,16 +6,16 @@ Transactional data structures for Dart.
 
 Garden offers data structures to augment Dart primitives and collections with in-memory transaction support.
 
-The primary class is a `Garden`, which allows you to `grow` connected `Leaf` instances. The garden offers methods to `branch`, `commit`, and `revert` all its leaves at once. As leaves are mutated, they record the inverse operation to an undo stack.
+The primary class is a `Garden`, which allows you to `grow` connected `Leaf` instances. The garden offers methods to `branch`, `commit`, and `rollback` all its leaves at once. As leaves are mutated, they record the inverse operation to an undo stack.
 
-Below is a usage example in which a `turn` leaf is tentatively modified, then reverted to a previous state.
+Below is a usage example in which a `turn` leaf is tentatively modified, then rolled back to a previous state.
 
 ```dart
 // Create a new garden.
 final garden = Garden();
 
 // Grow a connected value, in this case a simple integer.
-// All leaves must be created inside a `garden.grow` call.
+// All leaves must be initialized with a `garden.grow` call.
 final turn = garden.grow(ValueLeaf(0));
 
 garden.branch();        // Begin tentative execution.
@@ -24,7 +24,7 @@ print(turn.value);      // 0
 turn.value += 1;        // Perform some mutation(s).
 print(turn.value);      // 1
 
-garden.revert();        // Undo everything since the last branch.
+garden.rollback();      // Undo everything since the last branch.
 print(turn.value);      // 0
 
 // garden.commit();     // Alternatively: store it permanently.

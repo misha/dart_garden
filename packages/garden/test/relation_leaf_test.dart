@@ -21,7 +21,7 @@ void main() {
       expect(leaf.length, equals(3));
     });
 
-    test('add and revert', () {
+    test('add and rollback', () {
       garden.branch();
       leaf.add('c', 3);
       expect(leaf.containsPair('c', 3), isTrue);
@@ -46,7 +46,7 @@ void main() {
       expect(leaf.length, equals(3));
     });
 
-    test('remove and revert', () {
+    test('remove and rollback', () {
       garden.branch();
       expect(leaf.remove('a', 1), isTrue);
       expect(leaf.containsPair('a', 1), isFalse);
@@ -61,7 +61,7 @@ void main() {
       expect(leaf.length, equals(3));
     });
 
-    test('removeKey and revert', () {
+    test('removeKey and rollback', () {
       garden.branch();
       final removed = leaf.removeKey('a');
       expect(removed, equals({1, 2}));
@@ -73,7 +73,7 @@ void main() {
       expect(leaf.getKeys(1), equals({'a'}));
     });
 
-    test('removeValue and revert', () {
+    test('removeValue and rollback', () {
       garden.branch();
       final removed = leaf.removeValue(2);
       expect(removed, equals({'a', 'b'}));
@@ -82,7 +82,7 @@ void main() {
       expect(leaf.getKeys(2), equals({'a', 'b'}));
     });
 
-    test('clear and revert', () {
+    test('clear and rollback', () {
       garden.branch();
       leaf.clear();
       expect(leaf.isEmpty, isTrue);
@@ -115,7 +115,7 @@ void main() {
       expect(leaf.values, containsAll([1, 2]));
     });
 
-    test('nested branches revert independently', () {
+    test('nested branches rollback independently', () {
       garden.branch();
       leaf.add('c', 3);
 

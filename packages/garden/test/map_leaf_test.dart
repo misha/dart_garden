@@ -18,7 +18,7 @@ void main() {
     expect(leaf.containsKey('z'), isFalse);
   });
 
-  test('commit and revert set', () {
+  test('commit and rollback set', () {
     garden.branch();
     leaf['c'] = 3;
     garden.rollback();
@@ -30,7 +30,7 @@ void main() {
     expect(leaf['c'], equals(3));
   });
 
-  test('commit and revert overwrite existing key', () {
+  test('commit and rollback overwrite existing key', () {
     garden.branch();
     leaf['a'] = 42;
     garden.rollback();
@@ -42,7 +42,7 @@ void main() {
     expect(leaf['a'], equals(42));
   });
 
-  test('commit and revert remove()', () {
+  test('commit and rollback remove()', () {
     garden.branch();
     expect(leaf.remove('a'), equals(1));
     garden.rollback();
@@ -54,7 +54,7 @@ void main() {
     expect(leaf.containsKey('a'), isFalse);
   });
 
-  test('revert remove() with null value', () {
+  test('rollback remove() with null value', () {
     final leaf = garden.grow(MapLeaf<String, int?>({'a': null}));
     garden.branch();
     expect(leaf.remove('a'), isNull);
@@ -64,7 +64,7 @@ void main() {
     expect(leaf['a'], isNull);
   });
 
-  test('commit and revert clear()', () {
+  test('commit and rollback clear()', () {
     garden.branch();
     leaf.clear();
     garden.rollback();
@@ -76,7 +76,7 @@ void main() {
     expect(Map.fromEntries(leaf.entries), isEmpty);
   });
 
-  test('commit and revert update existing key', () {
+  test('commit and rollback update existing key', () {
     garden.branch();
     final updated = leaf.update('a', (value) => value + 1);
     expect(updated, equals(2));
@@ -89,7 +89,7 @@ void main() {
     expect(leaf['a'], equals(2));
   });
 
-  test('commit and revert updateAll()', () {
+  test('commit and rollback updateAll()', () {
     garden.branch();
     leaf.updateAll((key, value) => value * 10);
     expect(leaf, equals({'a': 10, 'b': 20}));
@@ -102,7 +102,7 @@ void main() {
     expect(leaf, equals({'a': 10, 'b': 20}));
   });
 
-  test('commit and revert addAll() with new and existing keys', () {
+  test('commit and rollback addAll() with new and existing keys', () {
     garden.branch();
     leaf.addAll({'a': 99, 'c': 3});
     expect(leaf, equals({'a': 99, 'b': 2, 'c': 3}));
@@ -115,7 +115,7 @@ void main() {
     expect(leaf, equals({'a': 99, 'b': 2, 'c': 3}));
   });
 
-  test('commit and revert addEntries()', () {
+  test('commit and rollback addEntries()', () {
     garden.branch();
     leaf.addEntries([MapEntry('b', 99), MapEntry('d', 4)]);
     expect(leaf, equals({'a': 1, 'b': 99, 'd': 4}));
@@ -123,7 +123,7 @@ void main() {
     expect(leaf, equals({'a': 1, 'b': 2}));
   });
 
-  test('commit and revert removeWhere()', () {
+  test('commit and rollback removeWhere()', () {
     garden.branch();
     leaf.removeWhere((key, value) => value.isEven);
     garden.rollback();
@@ -135,7 +135,7 @@ void main() {
     expect(leaf, equals({'a': 1}));
   });
 
-  test('commit and revert update with ifAbsent', () {
+  test('commit and rollback update with ifAbsent', () {
     garden.branch();
     final updated = leaf.update('c', (value) => value + 1, ifAbsent: () => 5);
     expect(updated, equals(5));
