@@ -5,9 +5,7 @@ environment:
   sdk: ^3.10.0
 workspace:
   - packages/garden
-  - packages/garden_dogs
-  - packages/garden_performance
-  - packages/example_tictactoe
+  - packages/perftest
 dev_dependencies:
   melos: ^7.4.0
 melos:

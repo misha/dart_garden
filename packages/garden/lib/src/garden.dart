@@ -1,11 +1,9 @@
-import 'dart:async';
-
 import 'package:garden/src/cell.dart';
 import 'package:meta/meta.dart';
 
 /// Coordinates transactional mutations across connected [Leaf] instances.
 ///
-/// Mutations recorded while branched can later be [commit]ted or [revert]ed.
+/// Mutations recorded while branched can later be [commit]ted or [rollback]ed.
 class Garden {
   final _history = <Cell>[];
   int _version = 0;
@@ -16,16 +14,30 @@ class Garden {
   /// Whether the garden currently has an active branch.
   bool get isBranched => _version > 0;
 
-  /// Runs [task] in this garden's zone and returns its result.
+  /// Adds the [leaf] to this garden.
   ///
-  /// Leaves must be created inside [grow] so they bind to this garden.
-  T grow<T>(T Function() task) {
-    return runZoned(task, zoneValues: {#garden: this});
+  /// A leaf must only be added to exactly one garden.
+  T grow<T extends Leaf>(T leaf) {
+    return leaf
+      ..garden = this
+      .._initialized = true;
   }
 
   /// Starts a new branch level for recording reversible mutations.
   void branch() {
     _version += 1;
+  }
+
+  /// Reverts mutations from the current branch level and exits that branch.
+  ///
+  /// Must be called only while branched.
+  void rollback() {
+    assert(isBranched);
+    _version -= 1;
+
+    while (_history.isNotEmpty && _history.last.version > _version) {
+      _history.removeLast().undo();
+    }
   }
 
   /// Commits all pending mutations and clears undo history.
@@ -36,28 +48,18 @@ class Garden {
     _version = 0;
     _history.clear();
   }
-
-  /// Reverts mutations from the current branch level and exits that branch.
-  ///
-  /// Must be called only while branched.
-  void revert() {
-    assert(isBranched);
-    _version -= 1;
-
-    while (_history.isNotEmpty && _history.last.version > _version) {
-      _history.removeLast().undo();
-    }
-  }
 }
 
 /// Mixin for state wrappers that participate in a [Garden].
 mixin Leaf {
   @protected
-  final Garden garden = Zone.current[#garden];
+  late final Garden garden;
+  bool _initialized = false;
 
-  /// Records an inverse mutation to support [Garden.revert].
+  /// Records an inverse mutation to support [Garden.rollback].
   @protected
   void record(void Function() undo) {
+    assert(_initialized, 'You must grow this leaf in a garden prior to usage.');
     if (!garden.isBranched) return;
     final cell = Cell(undo, garden._version);
     garden._history.add(cell);

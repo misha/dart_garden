@@ -7,18 +7,18 @@ void main() {
 
   setUp(() {
     garden = Garden();
-    leaf = garden.grow(() => RngLeaf(42));
+    leaf = garden.grow(RngLeaf(42));
   });
 
   test('seeded leaf produces deterministic values', () {
-    final other = garden.grow(() => RngLeaf(42));
+    final other = garden.grow(RngLeaf(42));
     expect(leaf.nextInt(), equals(other.nextInt()));
     expect(leaf.nextDouble(), equals(other.nextDouble()));
     expect(leaf.nextBool(), equals(other.nextBool()));
   });
 
   test('different seeds produce different values', () {
-    final other = garden.grow(() => RngLeaf(99));
+    final other = garden.grow(RngLeaf(99));
     expect(leaf.nextInt(), isNot(equals(other.nextInt())));
   });
 
@@ -31,24 +31,24 @@ void main() {
     expect(leaf.nextInt(), isNot(equals(a)));
   });
 
-  test('revert restores RNG state', () {
+  test('rollback restores RNG state', () {
     garden.branch();
     final a = leaf.nextInt();
     final b = leaf.nextInt();
-    garden.revert();
+    garden.rollback();
 
-    // After revert the generator replays the same sequence.
+    // After rollback the generator replays the same sequence.
     expect(leaf.nextInt(), equals(a));
     expect(leaf.nextInt(), equals(b));
   });
 
-  test('revert across multiple calls in same version records once', () {
+  test('rollback across multiple calls in same version records once', () {
     garden.branch();
     leaf.nextInt();
     leaf.nextInt();
     leaf.nextInt();
     final state = leaf.save();
-    garden.revert();
+    garden.rollback();
 
     // State was captured at branch entry, not at each call.
     expect(leaf.save(), isNot(equals(state)));
@@ -57,22 +57,22 @@ void main() {
   test('save returns restorable state', () {
     leaf.nextInt();
     final state = leaf.save();
-    final restored = garden.grow(() => RngLeaf.restore(state));
+    final restored = garden.grow(RngLeaf.restore(state));
     expect(restored.nextInt(), equals(leaf.nextInt()));
   });
 
-  test('nested branches revert independently', () {
+  test('nested branches rollback independently', () {
     garden.branch();
     final a = leaf.nextInt();
 
     garden.branch();
     leaf.nextInt();
-    garden.revert(); // inner revert
+    garden.rollback(); // inner rollback
 
     // Should replay from inner branch point, not outer.
     expect(leaf.nextInt(), isNot(equals(a)));
 
-    garden.revert(); // outer revert
+    garden.rollback(); // outer rollback
     expect(leaf.nextInt(), equals(a));
   });
 }

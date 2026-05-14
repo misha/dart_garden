@@ -1,0 +1,25 @@
+name: tictactoe
+description: Garden example implementing Tic-Tac-Toe.
+publish_to: none
+version: 1.0.0
+repository: https://github.com/misha/dart_garden
+environment:
+  sdk: ^3.10.0
+dependencies:
+  garden:
+    path: ../packages/garden
+  collection: ^1.19.1
+  freezed_annotation: ^3.1.0
+  json_annotation: ^4.11.0
+  meta: ^1.17.0
+dev_dependencies:
+  build_runner: ^2.11.1
+  freezed: ^3.2.5
+  json_serializable: ^6.13.2
+  lints: ^6.1.0
+  test: ^1.30.0
+scripts:
+  analyze: dart analyze
+  build: dart run build_runner build 
+  watch: dart run build_runner watch
+  test: dart test

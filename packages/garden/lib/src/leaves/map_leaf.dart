@@ -4,7 +4,14 @@ import 'package:garden/src/garden.dart';
 
 /// A [Leaf] map implementation with branch-aware undo recording.
 class MapLeaf<K, V> with MapMixin<K, V>, Leaf {
-  MapLeaf([Map<K, V>? data]) : _delegate = data != null ? .of(data) : {};
+  MapLeaf([Map<K, V> data = const {}]) //
+    : _delegate = .of(data);
+
+  MapLeaf.pairs([Iterable<(K, V)> pairs = const []])
+    : _delegate = {
+        for (final (key, value) in pairs) //
+          key: value,
+      };
 
   Map<K, V> _delegate;
 
@@ -115,5 +122,12 @@ class MapLeaf<K, V> with MapMixin<K, V>, Leaf {
     final backup = _delegate;
     _delegate = {};
     record(() => _delegate = backup);
+  }
+
+  /// All (key, value) pairs in the map.
+  Iterable<(K, V)> get pairs sync* {
+    for (final MapEntry(:key, :value) in entries) {
+      yield (key, value);
+    }
   }
 }

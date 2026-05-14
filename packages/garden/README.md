@@ -6,17 +6,17 @@ Transactional data structures for Dart.
 
 Garden offers data structures to augment Dart primitives and collections with in-memory transaction support.
 
-The primary class is a `Garden`, which allows you to `grow` connected `Leaf` instances. The garden offers methods to `branch`, `commit`, and `revert` all its leaves at once. As leaves are mutated, they record the inverse operation to an undo stack.
+The primary class is a `Garden`, which allows you to `grow` connected `Leaf` instances. The garden offers methods to `branch`, `commit`, and `rollback` all its leaves at once. As leaves are mutated, they record the inverse operation to an undo stack.
 
-Below is a usage example in which a `turn` leaf is tentatively modified, then reverted to a previous state.
+Below is a usage example in which a `turn` leaf is tentatively modified, then rolled back to a previous state.
 
 ```dart
 // Create a new garden.
 final garden = Garden();
 
 // Grow a connected value, in this case a simple integer.
-// All leaves must be created inside a `garden.grow` call.
-final turn = garden.grow(() => ValueLeaf(0));
+// All leaves must be initialized with a `garden.grow` call.
+final turn = garden.grow(ValueLeaf(0));
 
 garden.branch();        // Begin tentative execution.
 print(turn.value);      // 0
@@ -24,7 +24,7 @@ print(turn.value);      // 0
 turn.value += 1;        // Perform some mutation(s).
 print(turn.value);      // 1
 
-garden.revert();        // Undo everything since the last branch.
+garden.rollback();      // Undo everything since the last branch.
 print(turn.value);      // 0
 
 // garden.commit();     // Alternatively: store it permanently.
@@ -48,9 +48,7 @@ Currently, the following leaves are available:
 
 The undo functionality stores function pointers. In other words, **this library cannot serialize its undo stack**. This makes `garden` a great choice for in-memory simulations, but a poor one for use cases that require saving state mid-transaction (e.g. for subsequent continuation).
 
-For serialization of the values themselves, unfortunately `json_serializable` does not support generic classes. [`dogs`](https://pub.dev/packages/dogs_core) is a fantastic alternative that *does*. For fast, transparent serialization, use [`garden_dogs`](https://pub.dev/packages/garden_dogs) and import its `GardenPlugin` into your `dogs` instance.
-
-Note that this still does **not** serialize the undo stack.
+Check the example project at the repository root for a clear precedent on how to manually convert to and from an object managed by a garden.
 
 ## Motivation
 

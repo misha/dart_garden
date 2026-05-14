@@ -8,16 +8,10 @@
       "path": "packages/garden",
     },
     {
-      "path": "packages/garden_dogs",
-      "name": "dogs",
+      "path": "packages/perftest",
     },
     {
-      "path": "packages/garden_performance",
-      "name": "performance",
-    },
-    {
-      "path": "packages/example_tictactoe",
-      "name": "tictactoe (example)",
+      "path": "example",
     },
     {
       "path": ".github",
@@ -30,6 +24,7 @@
     "editor.defaultColorDecorators": "always",
     "editor.formatOnSave": true,
     "files.exclude": {
+      "**/*.freezed.dart": true,
       "**/*.g.dart": true,
     },
     "files.insertFinalNewline": true,
@@ -61,8 +56,10 @@
   },
   "extensions": {
     "recommendations": [
+      "dart-code.flutter",
       "streetsidesoftware.code-spell-checker-cspell-bundled-dictionaries",
-      "dart-code.dart-code",
+      "streetsidesoftware.code-spell-checker",
+      "darkriszty.markdown-table-prettify",
     ],
   },
 }
