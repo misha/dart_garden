@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.0.1
+
+- Fixed a bug in `RngLeaf` causing it to fail to revert in branches of depth >1.
+- Improved performance of all leaves by removing the internal `Cell` class.
+- Added fast paths to allocating operations when unbranched.
+- Added unbranched, search, and burst-style performance tests for realistic workload measurement.
+
 ## 3.0.0
 
 - Each leaf must now be grown individually; no magic `Zone`-backed storage.
