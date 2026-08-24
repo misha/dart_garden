@@ -6,6 +6,7 @@
 - Improved performance of all leaves by removing the internal `Cell` class.
 - Added fast paths to allocating operations when unbranched.
 - Added unbranched, search, and burst-style performance tests for realistic workload measurement.
+- Added the tests back to the pub.dev artifact.
 
 ## 3.0.0
 
