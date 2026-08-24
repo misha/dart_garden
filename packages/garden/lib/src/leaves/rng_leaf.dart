@@ -10,7 +10,6 @@ class RngLeaf with Leaf implements Random {
   RngLeaf.restore(Uint8List state) : _source = Xoshiro128P.fromSeed(state);
 
   final Xoshiro128 _source;
-  final List<int> _versions = [];
 
   @override
   bool nextBool() {
@@ -34,17 +33,7 @@ class RngLeaf with Leaf implements Random {
 
   void _save() {
     if (!garden.isBranched) return;
-
-    final current = garden.version;
-
-    if (_versions.isNotEmpty && _versions.last > current) {
-      _versions.removeLast();
-    }
-
-    if (_versions.isEmpty || _versions.last < current) {
-      final state = save();
-      record(() => _source.restore(state));
-      _versions.add(current);
-    }
+    final state = _source.save();
+    record(() => _source.restore(state));
   }
 }

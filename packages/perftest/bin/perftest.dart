@@ -15,8 +15,10 @@ const _operations = {
   'list': ['set', 'add', 'addAll', 'insert', 'insertAll', 'remove', 'removeAt', 'removeRange', 'removeWhere', 'removeWhereSparse', 'removeLast', 'clear'],
   'set': ['add', 'addAll', 'remove', 'removeAll', 'removeWhere', 'clear'],
   'map': ['set', 'addEntries', 'remove', 'removeWhere', 'update', 'updateAll', 'clear'],
-  'rng': ['nextInt'],
+  'rng': ['nextInt', 'burst'],
   'relation': ['add', 'remove', 'removeKey', 'removeValue', 'move', 'clear', 'length'],
+  'search': ['burst', 'nested'],
+  'plain': ['value', 'list', 'map', 'set', 'bulk'],
 };
 // dart format on
 
@@ -221,7 +223,13 @@ List<String> _generateStrings(
       .toList();
 }
 
-void Function(int i) _build(Garden garden, String type, String operation, int runs, Random rng) {
+void Function(int i) _build(
+  Garden garden,
+  String type,
+  String operation,
+  int runs,
+  Random rng,
+) {
   switch (type) {
     case 'value':
       final leaf = ValueLeaf(0);
@@ -261,7 +269,10 @@ void Function(int i) _build(Garden garden, String type, String operation, int ru
 
         case 'insertAll':
           final insertAllIndices = _generate(runs, rng, max: 100);
-          final insertAllBatches = List.generate(runs, (_) => _generate(10, rng));
+          final insertAllBatches = List.generate(
+            runs,
+            (_) => _generate(10, rng),
+          );
           return (i) => leaf.insertAll(insertAllIndices[i], insertAllBatches[i]);
 
         case 'remove':
@@ -313,7 +324,10 @@ void Function(int i) _build(Garden garden, String type, String operation, int ru
           return (i) => leaf.remove(targets[i]);
 
         case 'removeAll':
-          final batches = List.generate(runs, (_) => _generate(5, rng, max: 100));
+          final batches = List.generate(
+            runs,
+            (_) => _generate(5, rng, max: 100),
+          );
           return (i) => leaf.removeAll(batches[i]);
 
         case 'removeWhere':
@@ -379,6 +393,13 @@ void Function(int i) _build(Garden garden, String type, String operation, int ru
       garden.grow(leaf);
 
       switch (operation) {
+        case 'burst':
+          return (i) {
+            for (var draw = 0; draw < 8; draw += 1) {
+              leaf.nextInt();
+            }
+          };
+
         case 'nextInt':
           final counts = _generate(runs, rng, max: 10);
 
@@ -386,6 +407,102 @@ void Function(int i) _build(Garden garden, String type, String operation, int ru
             for (var j = 0; j <= counts[i]; j++) {
               leaf.nextInt();
             }
+          };
+
+        default:
+          throw ArgumentError.value(operation, 'operation');
+      }
+
+    case 'search':
+      final slots = ListLeaf(.generate(256, (i) => i));
+      final counters = ListLeaf(.generate(8, (i) => 0));
+      final turn = ValueLeaf(0);
+      garden.grow(slots);
+      garden.grow(counters);
+      garden.grow(turn);
+
+      switch (operation) {
+        case 'burst':
+          final indices = _generate(runs, rng, max: 200);
+
+          return (i) {
+            final at = indices[i];
+
+            for (var slot = 0; slot < 16; slot += 1) {
+              slots[at + slot] = i;
+            }
+
+            for (var counter = 0; counter < 4; counter += 1) {
+              counters[counter] += 1;
+            }
+
+            turn.value = i;
+          };
+
+        case 'nested':
+          final indices = _generate(runs, rng, max: 200);
+
+          return (i) {
+            final at = indices[i];
+
+            for (var depth = 0; depth < 3; depth += 1) {
+              garden.branch();
+
+              for (var slot = 0; slot < 8; slot += 1) {
+                slots[at + slot] = i + depth;
+              }
+            }
+
+            for (var depth = 0; depth < 3; depth += 1) {
+              garden.rollback();
+            }
+          };
+
+        default:
+          throw ArgumentError.value(operation, 'operation');
+      }
+
+    case 'plain':
+      switch (operation) {
+        case 'value':
+          final leaf = ValueLeaf(0);
+          garden.grow(leaf);
+          final values = _generate(runs, rng);
+          return (i) => leaf.value = values[i];
+
+        case 'list':
+          final leaf = ListLeaf(.generate(256, (i) => i));
+          garden.grow(leaf);
+          final indices = _generate(runs, rng, max: 256);
+          final values = _generate(runs, rng);
+          return (i) => leaf[indices[i]] = values[i];
+
+        case 'map':
+          final leaf = MapLeaf({for (var i = 0; i < 256; i += 1) i: i});
+          garden.grow(leaf);
+          final keys = _generate(runs, rng, max: 256);
+          final values = _generate(runs, rng);
+          return (i) => leaf[keys[i]] = values[i];
+
+        case 'set':
+          final leaf = SetLeaf({for (var i = 0; i < 256; i += 1) i});
+          garden.grow(leaf);
+          final values = _generate(runs, rng, max: 512);
+          return (i) => leaf.add(values[i]);
+
+        case 'bulk':
+          // The operations that copy a collection to describe their own undo.
+          // Unbranched there is nothing to describe, so the copy is the whole
+          // cost and all of it is avoidable.
+          final map = MapLeaf({for (var i = 0; i < 64; i += 1) i: i});
+          final list = ListLeaf(.generate(64, (i) => i));
+          garden.grow(map);
+          garden.grow(list);
+
+          return (i) {
+            map.updateAll((k, v) => v + 1);
+            list.sort();
+            list.removeWhere((v) => false);
           };
 
         default:
@@ -443,12 +560,13 @@ void Function(int i) _build(Garden garden, String type, String operation, int ru
 Duration _test(String leaf, String operation, int runs, Random rng) {
   final garden = Garden();
   final test = _build(garden, leaf, operation, runs, rng);
+  final branched = leaf != 'plain';
   final runtime = Stopwatch()..start();
 
   for (var i = 0; i < runs; i += 1) {
-    garden.branch();
+    if (branched) garden.branch();
     test(i);
-    garden.rollback();
+    if (branched) garden.rollback();
   }
 
   runtime.stop();

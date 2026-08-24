@@ -207,7 +207,7 @@ packages:
       path: "../packages/garden"
       relative: true
     source: path
-    version: "2.1.2"
+    version: "3.0.0"
   glob:
     dependency: transitive
     description:

@@ -20,11 +20,13 @@ class MapLeaf<K, V> with MapMixin<K, V>, Leaf {
 
   @override
   void operator []=(K key, V value) {
-    if (_delegate.containsKey(key)) {
-      final backup = _delegate[key] as V;
-      record(() => _delegate[key] = backup);
-    } else {
-      record(() => _delegate.remove(key));
+    if (garden.isBranched) {
+      if (_delegate.containsKey(key)) {
+        final backup = _delegate[key] as V;
+        record(() => _delegate[key] = backup);
+      } else {
+        record(() => _delegate.remove(key));
+      }
     }
 
     _delegate[key] = value;
@@ -44,6 +46,11 @@ class MapLeaf<K, V> with MapMixin<K, V>, Leaf {
 
   @override
   void addEntries(Iterable<MapEntry<K, V>> newEntries) {
+    if (!garden.isBranched) {
+      _delegate.addEntries(newEntries);
+      return;
+    }
+
     final added = <K>[];
     final overwritten = <MapEntry<K, V>>[];
 
@@ -78,6 +85,11 @@ class MapLeaf<K, V> with MapMixin<K, V>, Leaf {
 
   @override
   void removeWhere(bool Function(K, V) test) {
+    if (!garden.isBranched) {
+      _delegate.removeWhere(test);
+      return;
+    }
+
     final removed = <MapEntry<K, V>>[];
 
     for (final entry in _delegate.entries) {
@@ -111,6 +123,12 @@ class MapLeaf<K, V> with MapMixin<K, V>, Leaf {
   @override
   void updateAll(V Function(K, V) update) {
     if (_delegate.isEmpty) return;
+
+    if (!garden.isBranched) {
+      _delegate.updateAll(update);
+      return;
+    }
+
     final backup = _delegate.entries.toList();
     _delegate.updateAll(update);
     record(() => _delegate.addEntries(backup));

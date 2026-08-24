@@ -35,6 +35,11 @@ class SetLeaf<T> with SetMixin<T>, Leaf {
 
   @override
   void addAll(Iterable<T> elements) {
+    if (!garden.isBranched) {
+      _delegate.addAll(elements);
+      return;
+    }
+
     final added = <T>[];
 
     for (final element in elements) {
@@ -60,6 +65,11 @@ class SetLeaf<T> with SetMixin<T>, Leaf {
 
   @override
   void removeAll(Iterable<Object?> elements) {
+    if (!garden.isBranched) {
+      _delegate.removeAll(elements);
+      return;
+    }
+
     final removed = <T>[];
 
     for (final element in elements) {
@@ -84,6 +94,11 @@ class SetLeaf<T> with SetMixin<T>, Leaf {
 
   @override
   void removeWhere(bool Function(T) test) {
+    if (!garden.isBranched) {
+      _delegate.removeWhere(test);
+      return;
+    }
+
     final removed = where(test).toList();
     if (removed.isEmpty) return;
     _delegate.removeAll(removed);

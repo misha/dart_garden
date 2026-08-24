@@ -1,18 +1,17 @@
-import 'package:garden/src/cell.dart';
 import 'package:meta/meta.dart';
 
 /// Coordinates transactional mutations across connected [Leaf] instances.
 ///
 /// Mutations recorded while branched can later be [commit]ted or [rollback]ed.
 class Garden {
-  final _history = <Cell>[];
-  int _version = 0;
+  final _undos = <void Function()>[];
+  final _marks = <int>[];
 
   /// The current branching depth of the garden.
-  int get version => _version;
+  int get version => _marks.length;
 
   /// Whether the garden currently has an active branch.
-  bool get isBranched => _version > 0;
+  bool get isBranched => _marks.isNotEmpty;
 
   /// Adds the [leaf] to this garden.
   ///
@@ -25,7 +24,7 @@ class Garden {
 
   /// Starts a new branch level for recording reversible mutations.
   void branch() {
-    _version += 1;
+    _marks.add(_undos.length);
   }
 
   /// Reverts mutations from the current branch level and exits that branch.
@@ -33,11 +32,13 @@ class Garden {
   /// Must be called only while branched.
   void rollback() {
     assert(isBranched);
-    _version -= 1;
+    final mark = _marks.removeLast();
 
-    while (_history.isNotEmpty && _history.last.version > _version) {
-      _history.removeLast().undo();
+    for (var at = _undos.length - 1; at >= mark; at -= 1) {
+      _undos[at]();
     }
+
+    _undos.length = mark;
   }
 
   /// Commits all pending mutations and clears undo history.
@@ -45,8 +46,8 @@ class Garden {
   /// Must be called only while branched.
   void commit() {
     assert(isBranched);
-    _version = 0;
-    _history.clear();
+    _marks.clear();
+    _undos.clear();
   }
 }
 
@@ -61,7 +62,6 @@ mixin Leaf {
   void record(void Function() undo) {
     assert(_initialized, 'You must grow this leaf in a garden prior to usage.');
     if (!garden.isBranched) return;
-    final cell = Cell(undo, garden._version);
-    garden._history.add(cell);
+    garden._undos.add(undo);
   }
 }

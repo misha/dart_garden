@@ -24,7 +24,7 @@ class ListLeaf<T> with ListMixin<T>, Leaf {
 
   @override
   set length(int newLength) {
-    if (newLength < length) {
+    if (garden.isBranched && newLength < length) {
       final backup = _delegate.sublist(newLength);
       _delegate.length = newLength;
       record(() => _delegate.addAll(backup));
@@ -83,6 +83,12 @@ class ListLeaf<T> with ListMixin<T>, Leaf {
   @override
   void removeWhere(bool Function(T) test) {
     if (isEmpty) return;
+
+    if (!garden.isBranched) {
+      _delegate.removeWhere(test);
+      return;
+    }
+
     final backup = _delegate.toList();
     final originalLength = length;
     var write = 0;
@@ -109,6 +115,11 @@ class ListLeaf<T> with ListMixin<T>, Leaf {
 
   @override
   void sort([int Function(T a, T b)? compare]) {
+    if (!garden.isBranched) {
+      _delegate.sort(compare);
+      return;
+    }
+
     final backup = _delegate.toList();
     _delegate.sort(compare);
     record(() => _delegate.setAll(0, backup));
@@ -116,6 +127,11 @@ class ListLeaf<T> with ListMixin<T>, Leaf {
 
   @override
   void setAll(int index, Iterable<T> iterable) {
+    if (!garden.isBranched) {
+      _delegate.setAll(index, iterable);
+      return;
+    }
+
     final items = iterable.toList();
     final backup = _delegate.sublist(index, index + items.length);
     _delegate.setAll(index, items);
@@ -124,6 +140,11 @@ class ListLeaf<T> with ListMixin<T>, Leaf {
 
   @override
   void setRange(int start, int end, Iterable<T> iterable, [int skipCount = 0]) {
+    if (!garden.isBranched) {
+      _delegate.setRange(start, end, iterable, skipCount);
+      return;
+    }
+
     final backup = _delegate.sublist(start, end);
     _delegate.setRange(start, end, iterable, skipCount);
     record(() => _delegate.setRange(start, end, backup));
@@ -131,6 +152,11 @@ class ListLeaf<T> with ListMixin<T>, Leaf {
 
   @override
   void fillRange(int start, int end, [T? fillValue]) {
+    if (!garden.isBranched) {
+      _delegate.fillRange(start, end, fillValue);
+      return;
+    }
+
     final backup = _delegate.sublist(start, end);
     _delegate.fillRange(start, end, fillValue);
     record(() => _delegate.setRange(start, end, backup));
@@ -138,6 +164,11 @@ class ListLeaf<T> with ListMixin<T>, Leaf {
 
   @override
   void replaceRange(int start, int end, Iterable<T> replacements) {
+    if (!garden.isBranched) {
+      _delegate.replaceRange(start, end, replacements);
+      return;
+    }
+
     final backup = _delegate.sublist(start, end);
     final before = length;
     _delegate.replaceRange(start, end, replacements);
@@ -151,6 +182,11 @@ class ListLeaf<T> with ListMixin<T>, Leaf {
 
   @override
   void shuffle([Random? random]) {
+    if (!garden.isBranched) {
+      _delegate.shuffle(random);
+      return;
+    }
+
     final backup = _delegate.toList();
     _delegate.shuffle(random);
     record(() => _delegate.setAll(0, backup));
@@ -180,6 +216,12 @@ class ListLeaf<T> with ListMixin<T>, Leaf {
   @override
   void removeRange(int start, int end) {
     if (start == end) return;
+
+    if (!garden.isBranched) {
+      _delegate.removeRange(start, end);
+      return;
+    }
+
     final backup = _delegate.sublist(start, end);
     _delegate.removeRange(start, end);
     record(() => _delegate.insertAll(start, backup));
